@@ -37,12 +37,28 @@
             border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 22px; cursor: pointer;
         }
         .specs { padding: 16px; }
-        .param {
-            display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;
-            font-size: 1.02em;
+        .category {
+            margin-bottom: 20px; border: 1px solid #eee; border-radius: 8px; overflow: hidden;
         }
+        .category-title {
+            padding: 12px 16px; margin: 0; font-weight: bold; background: #f0f0f0; color: #333;
+            cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center;
+        }
+        .category-title::after { content: "+"; font-size: 1.5em; transition: transform 0.3s; }
+        .category-title.open::after { transform: rotate(45deg); content: "−"; }
+        .category-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: white;
+        }
+        .category.open .category-content { max-height: 1000px; }
+        .param {
+            display: flex; justify-content: space-between; padding: 8px 16px; border-bottom: 1px solid #f5f5f5;
+            font-size: 0.95em;
+        }
+        .param:last-child { border-bottom: none; }
         .param strong { color: #333; }
-        .highlight { background: #fffbe6; font-weight: bold; padding: 12px 0 !important; }
+        .highlight { background: #fffbe6; font-weight: bold; }
+        .buying-link { text-align: center; padding: 10px; background: #e8f5e8; }
+        .buying-link a { color: var(--primary); text-decoration: none; }
 
         .footer { text-align: center; padding: 30px; color: #555; }
         .footer a { color: var(--primary); text-decoration: none; margin: 0 10px; }
@@ -51,174 +67,65 @@
 </head>
 <body>
 
-<h1>Car Comparison — Slovakia Market 2025</h1>
+<h1>Car Comparison — Slovakia Market (Dec 2025)</h1>
 
 <div class="controls">
     <select id="carSelect">
         <option value="">— Select a car to compare —</option>
-        <!-- Cars added by JS below -->
     </select>
     <button onclick="addCar()">Add to Compare</button>
     <div class="count" id="count">0 cars selected</div>
+    <div>Petrol €/L: <input type="number" step="0.01" value="1.55" id="petrol"> | Diesel €/L: <input type="number" step="0.01" value="1.52" id="diesel"> | Electricity €/kWh: <input type="number" step="0.001" value="0.191" id="elec"></div>
 </div>
 
 <div class="car-grid" id="comparison"></div>
 
 <div class="footer">
-    Real photos • Current Slovak prices (Dec 2025) • Dealers: 
-    <a href="https://skoda.sk" target="_blank">Škoda</a> • 
-    <a href="https://vw.sk" target="_blank">VW</a> • 
-    <a href="https://toyota.sk" target="_blank">Toyota</a> • 
-    <a href="https://tesla.com/sk_sk" target="_blank">Tesla</a> • 
-    <a href="https://mazda.sk" target="_blank">Mazda</a> • 
-    <a href="https://peugeot.sk" target="_blank">Peugeot</a> • 
-    <a href="https://citroen.sk" target="_blank">Citroën</a> • 
-    <a href="https://seat.sk" target="_blank">SEAT</a> • 
-    <a href="https://cupraofficial.com" target="_blank">CUPRA</a> • 
-    <a href="https://honda.sk" target="_blank">Honda</a> • 
-    <a href="https://hyundai.sk" target="_blank">Hyundai</a> • 
-    <a href="https://kia.sk" target="_blank">Kia</a> • 
-    <a href="https://opel.sk" target="_blank">Opel</a> • 
-    <a href="https://leapmotor.com" target="_blank">Leapmotor</a> • 
-    <a href="https://ford.sk" target="_blank">Ford</a>
+    Data from official Slovak dealers • Prices as of Dec 2025
 </div>
 
 <script>
-// Full database of popular cars in Slovakia 2025 - Expanded with all models from requested brands
 const carDatabase = [
-    // Mazda (from official site: CX-30, CX-5, CX-60, CX-80, CX-90, Mazda3, MX-30, MX-5)
-    { make: "Mazda", model: "CX-30 2.0 e-Skyactiv G", price: "28 990 €", img: "https://www.mazda.sk/content/dam/mazda-sk/models/cx-30/hero.jpg", type:"petrol", cons:6.5, range:700, tank:51, length:"4395 mm", trunk:"430 L", rearLeg:"910 mm", accel:"10.4 s", euroNCAP:"5 stars", adas:"i-Activsense, Lane Keep", warranty:"3 yr" },
-    { make: "Mazda", model: "CX-5 2.0 Skyactiv-G", price: "32 500 €", img: "https://www.mazda.sk/content/dam/mazda-sk/models/cx-5/hero.jpg", type:"petrol", cons:7.0, range:650, tank:58, length:"4575 mm", trunk:"506 L", rearLeg:"950 mm", accel:"9.2 s", euroNCAP:"5 stars", adas:"Adaptive Cruise, Blind Spot", warranty:"3 yr" },
-    { make: "Mazda", model: "CX-60 PHEV", price: "45 000 €", img: "https://www.mazda.sk/content/dam/mazda-sk/models/cx-60/hero.jpg", type:"hybrid", cons:1.5, range:700, tank:70, length:"4745 mm", trunk:"570 L", rearLeg:"980 mm", accel:"5.8 s", euroNCAP:"5 stars", adas:"360 View, AEB", warranty:"3 yr" },
-    { make: "Mazda", model: "CX-80 PHEV", price: "48 900 €", img: "https://www.mazda.sk/content/dam/mazda-sk/models/cx-80/hero.jpg", type:"hybrid", cons:1.6, range:650, tank:70, length:"4990 mm", trunk:"687 L", rearLeg:"1020 mm", accel:"6.2 s", euroNCAP:"5 stars", adas:"Traffic Jam Assist", warranty:"3 yr" },
-    { make: "Mazda", model: "CX-90 PHEV", price: "52 000 €", img: "https://www.mazda.sk/content/dam/mazda-sk/models/cx-90/hero.jpg", type:"hybrid", cons:1.7, range:600, tank:70, length:"5120 mm", trunk:"795 L", rearLeg:"1050 mm", accel:"6.0 s", euroNCAP:"5 stars", adas:"Rear Cross Traffic", warranty:"3 yr" },
-    { make: "Mazda", model: "Mazda3 Hatchback 2.0 e-Skyactiv G", price: "25 500 €", img: "https://www.mazda.sk/content/dam/mazda-sk/models/mazda3/hero.jpg", type:"petrol", cons:5.9, range:750, tank:51, length:"4460 mm", trunk:"358 L", rearLeg:"890 mm", accel:"9.1 s", euroNCAP:"5 stars", adas:"Lane Departure Warning", warranty:"3 yr" },
-    { make: "Mazda", model: "MX-30 EV", price: "35 900 €", img: "https://www.mazda.sk/content/dam/mazda-sk/models/mx-30/hero.jpg", type:"ev", cons:15.0, range:200, battery:35.5, length:"4395 mm", trunk:"366 L", rearLeg:"900 mm", accel:"9.7 s", euroNCAP:"5 stars", adas:"Cruising & Traffic Support", warranty:"5 yr battery" },
-    { make: "Mazda", model: "MX-5 RF 2.0 Skyactiv-G", price: "38 000 €", img: "https://www.mazda.sk/content/dam/mazda-sk/models/mx-5/hero.jpg", type:"petrol", cons:7.2, range:550, tank:45, length:"3915 mm", trunk:"125 L", rearLeg:"N/A", accel:"6.5 s", euroNCAP:"4 stars", adas:"Rear Parking Sensors", warranty:"3 yr" },
-
-    // Peugeot (from official site: 208, 3008, 308, 5008, 508, e-208, e-308)
-    { make: "Peugeot", model: "208 1.2 PureTech", price: "19 990 €", img: "https://www.peugeot.sk/content/dam/peugeot/sk/models/208/hero.jpg", type:"petrol", cons:5.3, range:780, tank:40, length:"4055 mm", trunk:"311 L", rearLeg:"730 mm", accel:"9.9 s", euroNCAP:"4 stars", adas:"Active Safety Brake", warranty:"2 yr" },
-    { make: "Peugeot", model: "3008 Hybrid", price: "36 500 €", img: "https://www.peugeot.sk/content/dam/peugeot/sk/models/3008/hero.jpg", type:"hybrid", cons:5.0, range:900, tank:52, length:"4447 mm", trunk:"520 L", rearLeg:"750 mm", accel:"8.9 s", euroNCAP:"5 stars", adas:"Drive Assist Plus", warranty:"2 yr" },
-    { make: "Peugeot", model: "308 SW 1.2 PureTech", price: "27 000 €", img: "https://www.peugeot.sk/content/dam/peugeot/sk/models/308/hero.jpg", type:"petrol", cons:5.7, range:750, tank:52, length:"4637 mm", trunk:"608 L", rearLeg:"760 mm", accel:"10.2 s", euroNCAP:"5 stars", adas:"Night Vision", warranty:"2 yr" },
-    { make: "Peugeot", model: "5008 1.2 PureTech", price: "38 900 €", img: "https://www.peugeot.sk/content/dam/peugeot/sk/models/5008/hero.jpg", type:"petrol", cons:6.1, range:700, tank:52, length:"4641 mm", trunk:"780 L", rearLeg:"770 mm", accel:"10.2 s", euroNCAP:"5 stars", adas:"360° Camera", warranty:"2 yr" },
-    { make: "Peugeot", model: "508 SW 1.6 Hybrid", price: "42 000 €", img: "https://www.peugeot.sk/content/dam/peugeot/sk/models/508/hero.jpg", type:"hybrid", cons:5.2, range:850, tank:62, length:"4846 mm", trunk:"530 L", rearLeg:"780 mm", accel:"8.3 s", euroNCAP:"5 stars", adas:"Adaptive Cruise", warranty:"2 yr" },
-    { make: "Peugeot", model: "e-208 EV", price: "32 500 €", img: "https://www.peugeot.sk/content/dam/peugeot/sk/models/e-208/hero.jpg", type:"ev", cons:15.2, range:340, battery:50, length:"4055 mm", trunk:"311 L", rearLeg:"730 mm", accel:"8.1 s", euroNCAP:"4 stars", adas:"Stop & Go", warranty:"8 yr battery" },
-    { make: "Peugeot", model: "e-308 EV", price: "39 000 €", img: "https://www.peugeot.sk/content/dam/peugeot/sk/models/e-308/hero.jpg", type:"ev", cons:15.8, range:412, battery:54, length:"4367 mm", trunk:"412 L", rearLeg:"760 mm", accel:"7.7 s", euroNCAP:"5 stars", adas:"Highway Integration", warranty:"8 yr battery" },
-
-    // Citroën (from official site: C3, C3 Aircross, C4, C5 Aircross, ë-C3, ë-C4)
-    { make: "Citroën", model: "C3 1.2 PureTech", price: "18 500 €", img: "https://www.citroen.sk/content/dam/citroen/sk/models/c3/hero.jpg", type:"petrol", cons:5.1, range:800, tank:44, length:"3996 mm", trunk:"300 L", rearLeg:"720 mm", accel:"10.3 s", euroNCAP:"4 stars", adas:"Active Safety Brake", warranty:"2 yr" },
-    { make: "Citroën", model: "C3 Aircross 1.2 PureTech", price: "22 000 €", img: "https://www.citroen.sk/content/dam/citroen/sk/models/c3-aircross/hero.jpg", type:"petrol", cons:5.6, range:750, tank:45, length:"4154 mm", trunk:"410 L", rearLeg:"740 mm", accel:"10.2 s", euroNCAP:"4 stars", adas:"Lane Departure Warning", warranty:"2 yr" },
-    { make: "Citroën", model: "C4 1.2 PureTech", price: "24 900 €", img: "https://www.citroen.sk/content/dam/citroen/sk/models/c4/hero.jpg", type:"petrol", cons:5.4, range:780, tank:47, length:"4360 mm", trunk:"380 L", rearLeg:"750 mm", accel:"9.6 s", euroNCAP:"4 stars", adas:"Driver Attention Alert", warranty:"2 yr" },
-    { make: "Citroën", model: "C5 Aircross Hybrid", price: "35 000 €", img: "https://www.citroen.sk/content/dam/citroen/sk/models/c5-aircross/hero.jpg", type:"hybrid", cons:5.0, range:900, tank:52, length:"4500 mm", trunk:"580 L", rearLeg:"780 mm", accel:"8.7 s", euroNCAP:"5 stars", adas:"Highway Driver Assist", warranty:"2 yr" },
-    { make: "Citroën", model: "ë-C3 EV", price: "23 300 €", img: "https://www.citroen.sk/content/dam/citroen/sk/models/e-c3/hero.jpg", type:"ev", cons:13.2, range:320, battery:44, length:"4440 mm", trunk:"310 L", rearLeg:"720 mm", accel:"11.0 s", euroNCAP:"4 stars", adas:"Speed Limit Recognition", warranty:"8 yr battery" },
-    { make: "Citroën", model: "ë-C4 EV", price: "31 000 €", img: "https://www.citroen.sk/content/dam/citroen/sk/models/e-c4/hero.jpg", type:"ev", cons:15.4, range:360, battery:50, length:"4360 mm", trunk:"380 L", rearLeg:"750 mm", accel:"9.7 s", euroNCAP:"4 stars", adas:"Blind Spot Detection", warranty:"8 yr battery" },
-
-    // SEAT (from official site: Ibiza, Arona, Leon, Formentor, Ateca, Tarraco)
-    { make: "SEAT", model: "Ibiza 1.0 TSI", price: "19 500 €", img: "https://www.seat.sk/content/dam/seat/sk/models/ibiza/hero.jpg", type:"petrol", cons:5.0, range:850, tank:40, length:"4054 mm", trunk:"355 L", rearLeg:"720 mm", accel:"10.2 s", euroNCAP:"5 stars", adas:"Front Assist", warranty:"2 yr" },
-    { make: "SEAT", model: "Arona 1.0 TSI", price: "21 000 €", img: "https://www.seat.sk/content/dam/seat/sk/models/arona/hero.jpg", type:"petrol", cons:5.3, range:800, tank:40, length:"4312 mm", trunk:"400 L", rearLeg:"740 mm", accel:"10.5 s", euroNCAP:"5 stars", adas:"Lane Assist", warranty:"2 yr" },
-    { make: "SEAT", model: "Leon 1.5 TSI", price: "25 900 €", img: "https://www.seat.sk/content/dam/seat/sk/models/leon/hero.jpg", type:"petrol", cons:5.6, range:750, tank:55, length:"4368 mm", trunk:"380 L", rearLeg:"760 mm", accel:"8.4 s", euroNCAP:"5 stars", adas:"Travel Assist", warranty:"2 yr" },
-    { make: "SEAT", model: "Formentor 1.5 eTSI", price: "32 000 €", img: "https://www.seat.sk/content/dam/seat/sk/models/formentor/hero.jpg", type:"hybrid", cons:5.2, range:800, tank:55, length:"4454 mm", trunk:"450 L", rearLeg:"780 mm", accel:"8.0 s", euroNCAP:"5 stars", adas:"Emergency Assist", warranty:"2 yr" },
-    { make: "SEAT", model: "Ateca 1.5 TSI", price: "28 500 €", img: "https://www.seat.sk/content/dam/seat/sk/models/ateca/hero.jpg", type:"petrol", cons:6.0, range:700, tank:50, length:"4384 mm", trunk:"510 L", rearLeg: "750 mm", accel:"9.0 s", euroNCAP:"5 stars", adas:"Adaptive Cruise", warranty:"2 yr" },
-    { make: "SEAT", model: "Tarraco 2.0 TDI", price: "38 000 €", img: "https://www.seat.sk/content/dam/seat/sk/models/tarraco/hero.jpg", type:"diesel", cons:5.5, range:900, tank:60, length:"4858 mm", trunk:"700 L", rearLeg:"800 mm", accel:"8.7 s", euroNCAP:"5 stars", adas:"Side Assist", warranty:"2 yr" },
-
-    // CUPRA (from official site: Formentor, Leon, Born, Tavascan)
-    { make: "CUPRA", model: "Formentor VZ 2.0 TSI", price: "45 000 €", img: "https://www.cupraofficial.com/content/dam/cupra/formentor/hero.jpg", type:"petrol", cons:8.0, range:600, tank:55, length:"4454 mm", trunk:"450 L", rearLeg:"780 mm", accel:"5.9 s", euroNCAP:"5 stars", adas:"Predictive Adaptive Cruise", warranty:"2 yr" },
-    { make: "CUPRA", model: "Leon VZx 2.0 TSI", price: "42 500 €", img: "https://www.cupraofficial.com/content/dam/cupra/leon/hero.jpg", type:"petrol", cons:7.5, range:650, tank:55, length:"4424 mm", trunk:"380 L", rearLeg:"760 mm", accel:"6.1 s", euroNCAP:"5 stars", adas:"Dynamic Chassis Control", warranty:"2 yr" },
-    { make: "CUPRA", model: "Born VZ 240 kW", price: "48 900 €", img: "https://www.cupraofficial.com/content/dam/cupra/born/hero.jpg", type:"ev", cons:17.0, range:550, battery:77, length:"4324 mm", trunk:"385 L", rearLeg:"750 mm", accel:"6.6 s", euroNCAP:"5 stars", adas:"Local Ambient Lighting", warranty:"5 yr battery" },
-    { make: "CUPRA", model: "Tavascan VZ", price: "55 000 €", img: "https://www.cupraofficial.com/content/dam/cupra/tavascan/hero.jpg", type:"ev", cons:16.5, range:560, battery:77, length:"4860 mm", trunk:"540 L", rearLeg:"800 mm", accel:"5.5 s", euroNCAP:"5 stars", adas:"360° Parking Camera", warranty:"5 yr battery" },
-
-    // Toyota (expanded: Aygo X, Yaris, Yaris Cross, Corolla, Corolla Cross, C-HR, RAV4, Highlander, Land Cruiser, Proace)
-    { make: "Toyota", model: "Aygo X 1.0 VVT-i", price: "16 500 €", img: "https://www.toyota.sk/content/dam/toyota/sk/models/aygo-x/hero.jpg", type:"petrol", cons:4.9, range:700, tank:30, length:"3700 mm", trunk:"231 L", rearLeg:"700 mm", accel:"13.8 s", euroNCAP:"3 stars", adas:"Road Sign Assist", warranty:"3 yr" },
-    { make: "Toyota", model: "Yaris 1.5 Hybrid", price: "21 000 €", img: "https://www.toyota.sk/content/dam/toyota/sk/models/yaris/hero.jpg", type:"hybrid", cons:3.8, range:900, tank:36, length:"3940 mm", trunk:"286 L", rearLeg:"720 mm", accel:"9.7 s", euroNCAP:"5 stars", adas:"Toyota Safety Sense", warranty:"10 yr hybrid" },
-    { make: "Toyota", model: "Yaris Cross 1.5 Hybrid", price: "24 500 €", img: "https://www.toyota.sk/content/dam/toyota/sk/models/yaris-cross/hero.jpg", type:"hybrid", cons:4.2, range:800, tank:36, length:"4180 mm", trunk:"397 L", rearLeg:"740 mm", accel:"10.3 s", euroNCAP:"5 stars", adas:"Pre-Collision System", warranty:"10 yr hybrid" },
-    { make: "Toyota", model: "Corolla Touring Sports Hybrid", price: "28 990 €", img: "https://www.toyota.sk/content/dam/toyota/sk/models/corolla-ts/hero.jpg", type:"hybrid", cons:4.2, range:1024, tank:43, length:"4650 mm", trunk:"596 L", rearLeg:"894 mm", accel:"9.2 s", euroNCAP:"5 stars", adas:"Lane Trace Assist", warranty:"10 yr hybrid" },
-    { make: "Toyota", model: "Corolla Cross Hybrid", price: "32 000 €", img: "https://www.toyota.sk/content/dam/toyota/sk/models/corolla-cross/hero.jpg", type:"hybrid", cons:4.8, range:850, tank:43, length:"4460 mm", trunk:"380 L", rearLeg:"780 mm", accel:"8.1 s", euroNCAP:"5 stars", adas:"Road Sign Assist", warranty:"10 yr hybrid" },
-    { make: "Toyota", model: "C-HR Hybrid", price: "30 500 €", img: "https://www.toyota.sk/content/dam/toyota/sk/models/c-hr/hero.jpg", type:"hybrid", cons:4.5, range:900, tank:43, length:"4365 mm", trunk:"388 L", rearLeg:"760 mm", accel:"7.2 s", euroNCAP:"5 stars", adas:"Adaptive Cruise Control", warranty:"10 yr hybrid" },
-    { make: "Toyota", model: "RAV4 PHEV", price: "45 000 €", img: "https://www.toyota.sk/content/dam/toyota/sk/models/rav4/hero.jpg", type:"hybrid", cons:1.0, range:750, tank:55, length:"4600 mm", trunk:"580 L", rearLeg:"800 mm", accel:"6.0 s", euroNCAP:"5 stars", adas:"Panoramic View Monitor", warranty:"10 yr hybrid" },
-    { make: "Toyota", model: "Highlander Hybrid", price: "55 000 €", img: "https://www.toyota.sk/content/dam/toyota/sk/models/highlander/hero.jpg", type:"hybrid", cons:6.6, range:700, tank:65, length:"4950 mm", trunk:"658 L", rearLeg:"850 mm", accel:"8.3 s", euroNCAP:"5 stars", adas:"Toyota Teammate", warranty:"10 yr hybrid" },
-    { make: "Toyota", model: "Land Cruiser 2.8 Diesel", price: "75 000 €", img: "https://www.toyota.sk/content/dam/toyota/sk/models/land-cruiser/hero.jpg", type:"diesel", cons:8.0, range:700, tank:80, length:"4950 mm", trunk:"640 L", rearLeg:"850 mm", accel:"8.5 s", euroNCAP:"5 stars", adas:"Multi-Terrain Select", warranty:"3 yr" },
-    { make: "Toyota", model: "Proace Verso Electric", price: "48 000 €", img: "https://www.toyota.sk/content/dam/toyota/sk/models/proace-verso/hero.jpg", type:"ev", cons:20.0, range:330, battery:75, length:"4959 mm", trunk:"800 L", rearLeg:"900 mm", accel:"13.2 s", euroNCAP:"5 stars", adas:"Driver Attention Alert", warranty:"8 yr battery" },
-
-    // Honda (from official site: Jazz, Civic, CR-V, HR-V)
-    { make: "Honda", model: "Jazz Hybrid", price: "24 000 €", img: "https://www.honda.sk/content/dam/honda/sk/models/jazz/hero.jpg", type:"hybrid", cons:4.5, range:800, tank:40, length:"4040 mm", trunk:"304 L", rearLeg:"740 mm", accel:"9.4 s", euroNCAP:"5 stars", adas:"Collision Mitigation Brake", warranty:"3 yr" },
-    { make: "Honda", model: "Civic 1.5 e:HEV", price: "30 500 €", img: "https://www.honda.sk/content/dam/honda/sk/models/civic/hero.jpg", type:"hybrid", cons:4.7, range:750, tank:40, length:"4518 mm", trunk:"410 L", rearLeg:"780 mm", accel:"7.8 s", euroNCAP:"5 stars", adas:"Adaptive Cruise Control", warranty:"3 yr" },
-    { make: "Honda", model: "CR-V e:HEV", price: "42 000 €", img: "https://www.honda.sk/content/dam/honda/sk/models/cr-v/hero.jpg", type:"hybrid", cons:5.5, range:700, tank:57, length:"4694 mm", trunk:"581 L", rearLeg:"810 mm", accel:"8.6 s", euroNCAP:"5 stars", adas:"Honda Sensing", warranty:"3 yr" },
-    { make: "Honda", model: "HR-V e:HEV", price: "32 500 €", img: "https://www.honda.sk/content/dam/honda/sk/models/hr-v/hero.jpg", type:"hybrid", cons:5.4, range:750, tank:40, length:"4330 mm", trunk:"319 L", rearLeg:"760 mm", accel:"8.6 s", euroNCAP:"5 stars", adas:"Traffic Jam Assist", warranty:"3 yr" },
-
-    // Hyundai (expanded: i10, i20, Bayon, i30, Kona, Tucson, Santa Fe, IONIQ 5, IONIQ 6)
-    { make: "Hyundai", model: "i10 1.0 MPI", price: "15 500 €", img: "https://www.hyundai.sk/content/dam/hyundai/sk/models/i10/hero.jpg", type:"petrol", cons:5.2, range:700, tank:34, length:"3815 mm", trunk:"252 L", rearLeg:"700 mm", accel:"13.8 s", euroNCAP:"3 stars", adas:"Lane Keep Assist", warranty:"5 yr" },
-    { make: "Hyundai", model: "i20 1.0 T-GDi", price: "18 900 €", img: "https://www.hyundai.sk/content/dam/hyundai/sk/models/i20/hero.jpg", type:"petrol", cons:5.6, range:750, tank:37, length:"4040 mm", trunk:"352 L", rearLeg:"740 mm", accel:"11.4 s", euroNCAP:"4 stars", adas:"Forward Collision Avoidance", warranty:"5 yr" },
-    { make: "Hyundai", model: "Bayon 1.0 T-GDi", price: "19 500 €", img: "https://www.hyundai.sk/content/dam/hyundai/sk/models/bayon/hero.jpg", type:"petrol", cons:5.3, range:780, tank:38, length:"4180 mm", trunk:"411 L", rearLeg: "750 mm", accel:"11.2 s", euroNCAP:"4 stars", adas:"Blind Spot Collision Warning", warranty:"5 yr" },
-    { make: "Hyundai", model: "i30 1.5 T-GDi", price: "23 000 €", img: "https://www.hyundai.sk/content/dam/hyundai/sk/models/i30/hero.jpg", type:"petrol", cons:5.8, range:720, tank:42, length:"4340 mm", trunk:"395 L", rearLeg: "780 mm", accel:"9.2 s", euroNCAP:"5 stars", adas:"Highway Driving Assist", warranty:"5 yr" },
-    { make: "Hyundai", model: "Kona Hybrid", price: "28 000 €", img: "https://www.hyundai.sk/content/dam/hyundai/sk/models/kona/hero.jpg", type:"hybrid", cons:4.3, range:900, tank:38, length:"4215 mm", trunk:"466 L", rearLeg: "760 mm", accel:"8.4 s", euroNCAP:"5 stars", adas:"Surround View Monitor", warranty:"5 yr" },
-    { make: "Hyundai", model: "Tucson 1.6 T-GDi Hybrid", price: "38 990 €", img: "https://www.hyundai.sk/content/dam/hyundai/sk/models/tucson/hero.jpg", type:"hybrid", cons:5.8, range:810, tank:47, length:"4630 mm", trunk:"620 L", rearLeg:"995 mm", accel:"8.0 s", euroNCAP:"5 stars", adas:"Highway Drive Assist", warranty:"5 yr" },
-    { make: "Hyundai", model: "Santa Fe 1.6 T-GDi Hybrid", price: "48 000 €", img: "https://www.hyundai.sk/content/dam/hyundai/sk/models/santa-fe/hero.jpg", type:"hybrid", cons:6.0, range:800, tank:65, length:"4830 mm", trunk:"571 L", rearLeg:"1020 mm", accel:"7.5 s", euroNCAP:"5 stars", adas:"Remote Smart Parking", warranty:"5 yr" },
-    { make: "Hyundai", model: "IONIQ 5 77 kWh", price: "45 000 €", img: "https://www.hyundai.sk/content/dam/hyundai/sk/models/ioniq5/hero.jpg", type:"ev", cons:17.0, range:507, battery:77, length:"4635 mm", trunk:"527 L", rearLeg:"990 mm", accel:"7.4 s", euroNCAP:"5 stars", adas:"Vehicle-to-Load", warranty:"5 yr battery" },
-    { make: "Hyundai", model: "IONIQ 6 77 kWh", price: "52 000 €", img: "https://www.hyundai.sk/content/dam/hyundai/sk/models/ioniq6/hero.jpg", type:"ev", cons:15.7, range:614, battery:77, length:"4855 mm", trunk:"401 L", rearLeg:"950 mm", accel:"5.1 s", euroNCAP:"5 stars", adas:"Hands-Free Active EC", warranty:"5 yr battery" },
-
-    // Kia (expanded: Picanto, Stonic, Ceed, Sportage, Sorento, EV6, EV9)
-    { make: "Kia", model: "Picanto 1.0 MPI", price: "15 000 €", img: "https://www.kia.sk/content/dam/kia/sk/models/picanto/hero.jpg", type:"petrol", cons:5.0, range:700, tank:35, length:"3605 mm", trunk:"255 L", rearLeg:"700 mm", accel:"13.1 s", euroNCAP:"3 stars", adas:"Lane Follow Assist", warranty:"7 yr" },
-    { make: "Kia", model: "Stonic 1.0 T-GDi", price: "20 500 €", img: "https://www.kia.sk/content/dam/kia/sk/models/stonic/hero.jpg", type:"petrol", cons:5.2, range:750, tank:40, length:"4140 mm", trunk:"352 L", rearLeg:"740 mm", accel:"10.8 s", euroNCAP:"3 stars", adas:"Forward Collision Avoidance", warranty:"7 yr" },
-    { make: "Kia", model: "Ceed SW 1.5 T-GDi", price: "25 000 €", img: "https://www.kia.sk/content/dam/kia/sk/models/ceed-sw/hero.jpg", type:"petrol", cons:5.8, range:720, tank:50, length:"4600 mm", trunk:"625 L", rearLeg: "780 mm", accel:"9.0 s", euroNCAP:"4 stars", adas:"Blind Spot Collision Avoidance", warranty:"7 yr" },
-    { make: "Kia", model: "Sportage 1.6 T-GDi Hybrid", price: "36 990 €", img: "https://www.kia.sk/content/dam/kia/sk/models/sportage/hero.jpg", type:"hybrid", cons:5.9, range:780, tank:46, length:"4515 mm", trunk:"587 L", rearLeg:"990 mm", accel:"8.2 s", euroNCAP:"5 stars", adas:"Drive Wise", warranty:"7 yr" },
-    { make: "Kia", model: "Sorento 1.6 T-GDi PHEV", price: "50 000 €", img: "https://www.kia.sk/content/dam/kia/sk/models/sorento/hero.jpg", type:"hybrid", cons:1.1, range:800, tank:67, length:"4810 mm", trunk:"616 L", rearLeg:"1000 mm", accel:"7.0 s", euroNCAP:"5 stars", adas:"Highway Driving Assist 2", warranty:"7 yr" },
-    { make: "Kia", model: "EV6 77 kWh", price: "46 000 €", img: "https://www.kia.sk/content/dam/kia/sk/models/ev6/hero.jpg", type:"ev", cons:17.3, range:528, battery:77, length:"4680 mm", trunk:"490 L", rearLeg: "950 mm", accel:"5.2 s", euroNCAP:"5 stars", adas:"Remote Smart Parking Assist", warranty:"7 yr battery" },
-    { make: "Kia", model: "EV9 99.8 kWh", price: "75 000 €", img: "https://www.kia.sk/content/dam/kia/sk/models/ev9/hero.jpg", type:"ev", cons:20.0, range:563, battery:99.8, length:"5010 mm", trunk:"333 L", rearLeg:"1050 mm", accel:"5.3 s", euroNCAP:"5 stars", adas:"Surround View Monitor", warranty:"7 yr battery" },
-
-    // Opel (from official site: Corsa, Astra, Mokka, Crossland, Grandland, Frontera)
-    { make: "Opel", model: "Corsa 1.2 Turbo", price: "19 000 €", img: "https://www.opel.sk/content/dam/opel/sk/models/corsa/hero.jpg", type:"petrol", cons:5.3, range:750, tank:44, length:"4060 mm", trunk:"309 L", rearLeg:"730 mm", accel:"9.9 s", euroNCAP:"4 stars", adas:"IntelliLux LED", warranty:"2 yr" },
-    { make: "Opel", model: "Astra 1.2 Turbo", price: "27 500 €", img: "https://www.opel.sk/content/dam/opel/sk/models/astra/hero.jpg", type:"petrol", cons:5.6, range:720, tank:52, length:"4495 mm", trunk:"422 L", rearLeg:"760 mm", accel:"9.2 s", euroNCAP:"5 stars", adas:"Adaptive Cruise Control", warranty:"2 yr" },
-    { make: "Opel", model: "Mokka Electric", price: "32 000 €", img: "https://www.opel.sk/content/dam/opel/sk/models/mokka/hero.jpg", type:"ev", cons:16.8, range:338, battery:50, length:"4151 mm", trunk:"350 L", rearLeg: "740 mm", accel:"9.2 s", euroNCAP:"4 stars", adas:"360° Camera", warranty:"8 yr battery" },
-    { make: "Opel", model: "Crossland 1.2 Turbo", price: "22 500 €", img: "https://www.opel.sk/content/dam/opel/sk/models/crossland/hero.jpg", type:"petrol", cons:5.7, range:700, tank:44, length:"4212 mm", trunk:"410 L", rearLeg: "750 mm", accel:"10.9 s", euroNCAP:"5 stars", adas:"Lane Keep Assist", warranty:"2 yr" },
-    { make: "Opel", model: "Grandland Hybrid", price: "40 000 €", img: "https://www.opel.sk/content/dam/opel/sk/models/grandland/hero.jpg", type:"hybrid", cons:5.5, range:800, tank:53, length:"4650 mm", trunk:"550 L", rearLeg:"800 mm", accel:"8.5 s", euroNCAP:"5 stars", adas:"Matrix LED Headlights", warranty:"2 yr" },
-    { make: "Opel", model: "Frontera 1.2 Turbo", price: "25 000 €", img: "https://www.opel.sk/content/dam/opel/sk/models/frontera/hero.jpg", type:"petrol", cons:6.0, range:700, tank:52, length:"4400 mm", trunk:"460 L", rearLeg:"780 mm", accel:"9.5 s", euroNCAP:"5 stars", adas:"Traffic Sign Assistant", warranty:"2 yr" },
-
-    // Leapmotor (new EV brand: T03, C10, B10)
-    { make: "Leapmotor", model: "T03 EV", price: "20 000 €", img: "https://www.leapmotor.com/content/dam/leapmotor/t03/hero.jpg", type:"ev", cons:12.0, range:265, battery:37.3, length:"3620 mm", trunk:"210 L", rearLeg:"700 mm", accel:"12.7 s", euroNCAP:"4 stars", adas:"AEB, Lane Departure", warranty:"5 yr battery" },
-    { make: "Leapmotor", model: "C10 EV", price: "30 000 €", img: "https://www.leapmotor.com/content/dam/leapmotor/c10/hero.jpg", type:"ev", cons:15.0, range:410, battery:69.9, length:"4615 mm", trunk:"445 L", rearLeg:"800 mm", accel:"7.7 s", euroNCAP:"5 stars", adas:"Adaptive Cruise, Blind Spot", warranty:"5 yr battery" },
-    { make: "Leapmotor", model: "B10 EV", price: "25 000 €", img: "https://www.leapmotor.com/content/dam/leapmotor/b10/hero.jpg", type:"ev", cons:14.0, range:350, battery:50, length:"4300 mm", trunk:"400 L", rearLeg:"750 mm", accel:"8.5 s", euroNCAP:"4 stars", adas:"360° View, Parking Assist", warranty:"5 yr battery" },
-
-    // Škoda (expanded: Citigo, Fabia, Scala, Octavia, Superb, Kamiq, Karoq, Kodiaq, Enyaq, Elroq)
-    { make: "Škoda", model: "Citigo 1.0 MPI", price: "14 000 €", img: "https://www.skoda.sk/content/dam/skoda/sk/models/citigo/hero.jpg", type:"petrol", cons:5.0, range:700, tank:35, length:"3605 mm", trunk:"259 L", rearLeg:"700 mm", accel:"12.3 s", euroNCAP:"3 stars", adas:"City Emergency Brake", warranty:"2 yr" },
-    { make: "Škoda", model: "Fabia 1.0 TSI", price: "17 500 €", img: "https://www.skoda.sk/content/dam/skoda/sk/models/fabia/hero.jpg", type:"petrol", cons:5.2, range:750, tank:40, length:"4103 mm", trunk:"380 L", rearLeg:"720 mm", accel:"9.7 s", euroNCAP:"5 stars", adas:"Front Assist", warranty:"2 yr" },
-    { make: "Škoda", model: "Scala 1.0 TSI", price: "20 000 €", img: "https://www.skoda.sk/content/dam/skoda/sk/models/scala/hero.jpg", type:"petrol", cons:5.5, range:800, tank:45, length:"4362 mm", trunk:"467 L", rearLeg: "740 mm", accel:"10.0 s", euroNCAP:"5 stars", adas:"Lane Assist", warranty:"2 yr" },
-    { make: "Škoda", model: "Octavia Combi 1.5 TSI", price: "29 980 €", img: "https://www.skoda.sk/content/dam/skoda/sk/models/octavia/hero.jpg", type:"petrol", cons:6.1, range:738, tank:45, length:"4689 mm", trunk:"640 L", rearLeg:"941 mm", accel:"10.4 s", euroNCAP:"5 stars", adas:"Side Assist", warranty:"2 yr" },
-    { make: "Škoda", model: "Superb Combi 2.0 TSI", price: "40 000 €", img: "https://www.skoda.sk/content/dam/skoda/sk/models/superb/hero.jpg", type:"petrol", cons:7.0, range:650, tank:66, length:"4902 mm", trunk:"690 L", rearLeg:"950 mm", accel:"7.7 s", euroNCAP:"5 stars", adas:"Travel Assist", warranty:"2 yr" },
-    { make: "Škoda", model: "Kamiq 1.0 TSI", price: "22 500 €", img: "https://www.skoda.sk/content/dam/skoda/sk/models/kamiq/hero.jpg", type:"petrol", cons:5.6, range:750, tank:45, length:"4241 mm", trunk:"400 L", rearLeg: "760 mm", accel:"10.2 s", euroNCAP:"5 stars", adas:"CreaCool", warranty:"2 yr" },
-    { make: "Škoda", model: "Karoq 1.5 TSI", price: "28 000 €", img: "https://www.skoda.sk/content/dam/skoda/sk/models/karoq/hero.jpg", type:"petrol", cons:6.0, range:700, tank:50, length:"4382 mm", trunk:"521 L", rearLeg: "780 mm", accel:"9.3 s", euroNCAP:"5 stars", adas:"Park Assist", warranty:"2 yr" },
-    { make: "Škoda", model: "Kodiaq 2.0 TDI", price: "44 900 €", img: "https://www.skoda.sk/content/dam/skoda/sk/models/kodiaq/hero.jpg", type:"diesel", cons:6.2, range:887, tank:55, length:"4758 mm", trunk:"910 L", rearLeg:"1040 mm", accel:"9.8 s", euroNCAP:"5 stars", adas:"Area View", warranty:"2 yr" },
-    { make: "Škoda", model: "Enyaq 80 EV", price: "45 000 €", img: "https://www.skoda.sk/content/dam/skoda/sk/models/enyaq/hero.jpg", type:"ev", cons:16.5, range:550, battery:77, length:"4649 mm", trunk:"585 L", rearLeg:"840 mm", accel:"8.5 s", euroNCAP:"5 stars", adas:"Predictive Adaptive Cruise", warranty:"8 yr battery" },
-    { make: "Škoda", model: "Elroq 85 EV", price: "40 000 €", img: "https://www.skoda.sk/content/dam/skoda/sk/models/elroq/hero.jpg", type:"ev", cons:15.0, range:580, battery:82, length:"4485 mm", trunk:"470 L", rearLeg: "800 mm", accel:"8.0 s", euroNCAP:"5 stars", adas:"Modern Solid Design", warranty:"8 yr battery" },
-
-    // Volkswagen (expanded: Up!, Polo, T-Cross, Golf, T-Roc, Tiguan, Touareg, ID.3, ID.4, ID.7)
-    { make: "Volkswagen", model: "Up! 1.0", price: "14 500 €", img: "https://www.vw.sk/content/dam/vw/sk/models/up/hero.jpg", type:"petrol", cons:5.0, range:700, tank:35, length:"3600 mm", trunk:"251 L", rearLeg:"700 mm", accel:"12.4 s", euroNCAP:"3 stars", adas:"City Emergency Braking", warranty:"2 yr" },
-    { make: "Volkswagen", model: "Polo 1.0 TSI", price: "19 000 €", img: "https://www.vw.sk/content/dam/vw/sk/models/polo/hero.jpg", type:"petrol", cons:5.2, range:750, tank:40, length:"4074 mm", trunk:"351 L", rearLeg:"720 mm", accel:"10.8 s", euroNCAP:"5 stars", adas:"IQ.DRIVE", warranty:"2 yr" },
-    { make: "Volkswagen", model: "T-Cross 1.0 TSI", price: "22 500 €", img: "https://www.vw.sk/content/dam/vw/sk/models/t-cross/hero.jpg", type:"petrol", cons:5.5, range:720, tank:40, length:"4108 mm", trunk:"455 L", rearLeg: "740 mm", accel:"10.5 s", euroNCAP:"5 stars", adas:"Lane Assist", warranty:"2 yr" },
-    { make: "Volkswagen", model: "Golf 1.5 eTSI", price: "31 450 €", img: "https://www.vw.sk/content/dam/vw/sk/models/golf/hero.jpg", type:"petrol", cons:5.8, range:776, tank:45, length:"4284 mm", trunk:"381 L", rearLeg:"900 mm", accel:"8.5 s", euroNCAP:"5 stars", adas:"IQ.DRIVE Travel Assist", warranty:"2 yr" },
-    { make: "Volkswagen", model: "T-Roc 1.5 TSI", price: "28 000 €", img: "https://www.vw.sk/content/dam/vw/sk/models/t-roc/hero.jpg", type:"petrol", cons:6.0, range:700, tank:50, length:"4236 mm", trunk:"445 L", rearLeg: "760 mm", accel:"8.5 s", euroNCAP:"5 stars", adas:"Emergency Assist", warranty:"2 yr" },
-    { make: "Volkswagen", model: "Tiguan 1.5 eTSI", price: "38 000 €", img: "https://www.vw.sk/content/dam/vw/sk/models/tiguan/hero.jpg", type:"petrol", cons:6.5, range:650, tank:58, length:"4519 mm", trunk:"615 L", rearLeg: "830 mm", accel:"9.0 s", euroNCAP:"5 stars", adas:"Area View", warranty:"2 yr" },
-    { make: "Volkswagen", model: "Touareg 3.0 TDI", price: "75 000 €", img: "https://www.vw.sk/content/dam/vw/sk/models/touareg/hero.jpg", type:"diesel", cons:7.5, range:800, tank:75, length:"4878 mm", trunk:"810 L", rearLeg:"950 mm", accel:"6.9 s", euroNCAP:"5 stars", adas:"Night Vision", warranty:"2 yr" },
-    { make: "Volkswagen", model: "ID.3 Pro", price: "40 000 €", img: "https://www.vw.sk/content/dam/vw/sk/models/id3/hero.jpg", type:"ev", cons:15.5, range:550, battery:77, length:"4261 mm", trunk:"1267 L", rearLeg: "800 mm", accel:"7.9 s", euroNCAP:"5 stars", adas:"Travel Assist", warranty:"8 yr battery" },
-    { make: "Volkswagen", model: "ID.4 GTX", price: "50 000 €", img: "https://www.vw.sk/content/dam/vw/sk/models/id4/hero.jpg", type:"ev", cons:18.0, range:520, battery:77, length:"4584 mm", trunk:"543 L", rearLeg: "850 mm", accel:"6.2 s", euroNCAP:"5 stars", adas:"Emergency Assist", warranty:"8 yr battery" },
-    { make: "Volkswagen", model: "ID.7 Pro", price: "55 000 €", img: "https://www.vw.sk/content/dam/vw/sk/models/id7/hero.jpg", type:"ev", cons:15.0, range:620, battery:86, length:"4951 mm", trunk:"532 L", rearLeg: "900 mm", accel:"6.5 s", euroNCAP:"5 stars", adas:"Massage Seats", warranty:"8 yr battery" },
-
-    // Ford (from official site: Ka+, Fiesta, Puma, Focus, Kuga, Explorer, Mustang Mach-E)
-    { make: "Ford", model: "Ka+ 1.2 Ti-VCT", price: "14 000 €", img: "https://www.ford.sk/content/dam/ford/sk/models/ka/hero.jpg", type:"petrol", cons:5.8, range:650, tank:42, length:"3614 mm", trunk:"255 L", rearLeg:"700 mm", accel:"12.8 s", euroNCAP:"3 stars", adas:"Pre-Collision Assist", warranty:"2 yr" },
-    { make: "Ford", model: "Puma 1.0 EcoBoost mHEV", price: "23 000 €", img: "https://www.ford.sk/content/dam/ford/sk/models/puma/hero.jpg", type:"hybrid", cons:5.5, range:700, tank:42, length:"4186 mm", trunk:"456 L", rearLeg: "740 mm", accel:"9.8 s", euroNCAP:"5 stars", adas:"Lane Keeping System", warranty:"2 yr" },
-    { make: "Ford", model: "Focus 1.0 EcoBoost", price: "25 500 €", img: "https://www.ford.sk/content/dam/ford/sk/models/focus/hero.jpg", type:"petrol", cons:5.6, range:750, tank:50, length:"4378 mm", trunk:"375 L", rearLeg: "760 mm", accel:"9.9 s", euroNCAP:"5 stars", adas:"Adaptive Cruise Control", warranty:"2 yr" },
-    { make: "Ford", model: "Kuga 1.5 EcoBoost PHEV", price: "35 000 €", img: "https://www.ford.sk/content/dam/ford/sk/models/kuga/hero.jpg", type:"hybrid", cons:1.4, range:750, tank:42, length:"4614 mm", trunk:"412 L", rearLeg: "800 mm", accel:"9.1 s", euroNCAP:"5 stars", adas:"BlueCruise", warranty:"2 yr" },
-    { make: "Ford", model: "Explorer PHEV", price: "60 000 €", img: "https://www.ford.sk/content/dam/ford/sk/models/explorer/hero.jpg", type:"hybrid", cons:2.0, range:600, tank:65, length:"4951 mm", trunk:"227 L", rearLeg:"850 mm", accel:"6.8 s", euroNCAP:"5 stars", adas:"360° Camera", warranty:"2 yr" },
-    { make: "Ford", model: "Mustang Mach-E GT", price: "70 000 €", img: "https://www.ford.sk/content/dam/ford/sk/models/mach-e/hero.jpg", type:"ev", cons:20.0, range:490, battery:91, length:"4713 mm", trunk:"402 L", rearLeg: "950 mm", accel:"3.7 s", euroNCAP:"5 stars", adas:"Co-Pilot360", warranty:"8 yr battery" },
-
-    // Existing ones (Škoda Octavia, VW Golf, Toyota Corolla, Tesla Model 3, Hyundai Tucson, Kia Sportage, Dacia Duster)
-    { name: "Škoda Octavia 1.5 TSI", price: "29 980 €", img: "https://www.skoda-storyboard.com/wp-content/uploads/2024/02/01_SKODA_OCTAVIA_COMBI_SELECTION_moon-white.jpg", type:"petrol", tank:45, cons:6.1, range:738, fill:()=>(45*petrol).toFixed(2), length:"4689 mm", trunk:"640 / 1700 L", rearLeg:"941 mm", accel:"10.4 s", euroNCAP:"5 stars", adas:"Front Assist, Lane Assist", warranty:"2 yr unlimited km" },
-    { name: "Volkswagen Golf 1.5 eTSI", price: "31 450 €", img: "https://media.vw.com/assets/images/vehicles/2025-golf-gti/eu/2025-vw-golf-gti-dolphin-gray-metallic-front-three-quarter.jpg", type:"petrol", tank:45, cons:5.8, range:776, fill:()=>(45*petrol).toFixed(2), length:"4284 mm", trunk:"381 / 1270 L", rearLeg:"900 mm", accel:"8.5 s", euroNCAP:"5 stars", adas:"IQ.DRIVE, Travel Assist", warranty:"2 yr" },
-    { name: "Toyota Corolla Touring Sports Hybrid", price: "28 990 €", img: "https://www.toyota.eu/content/dam/toyota/nmsc/europe/cars/corolla-touring-sports/gallery/toyota-corolla-touring-sports-2023-01.jpg", type:"hybrid", tank:43, cons:4.2, range:1024, fill:()=>(43*petrol).toFixed(2), length:"4650 mm", trunk:"596 / 1606 L", rearLeg:"894 mm", accel:"9.2 s", euroNCAP:"5 stars", adas:"Toyota Safety Sense 3", warranty:"10 yr hybrid" },
-    { name: "Tesla Model 3 Long Range AWD", price: "44 990 €", img: "https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,c_fit,f_auto,q_auto:best/Model-3-Performance-Hero-Desktop-EU", type:"ev", battery:79, cons:14.8, range:629, fill:()=>(79*elec).toFixed(2), length:"4720 mm", trunk:"594 L total", rearLeg:"912 mm", accel:"4.4 s", euroNCAP:"5 stars", adas:"Autopilot + FSD", warranty:"8 yr battery" },
-    { name: "Hyundai Tucson 1.6 T-GDi Hybrid", price: "38 990 €", img: "https://www.hyundai.com/content/dam/hyundai/sk/sk/images/nova-tucson/2025/tucson-hybrid-exterior-front.jpg", type:"hybrid", cons:5.8, range:810, tank:47, length:"4630 mm", trunk:"620 L", rearLeg:"995 mm", accel:"8.0 s", euroNCAP:"5 stars", adas:"Highway Drive Assist", warranty:"5 yr unlimited km" },
-    { name: "Kia Sportage 1.6 T-GDi Hybrid", price: "36 990 €", img: "https://www.kia.com/content/dam/kia2/sk/models/sportage/gallery/sportage-hev-exterior-01.jpg", type:"hybrid", cons:5.9, range:780, tank:46, length:"4515 mm", trunk:"587 L", rearLeg:"990 mm", accel:"8.2 s", euroNCAP:"5 stars", adas:"Drive Wise", warranty:"7 years" },
-    { name: "Dacia Duster 1.0 TCe", price: "18 990 €", img: "https://www.dacia.sk/media/2024-duster/duster-ext-01.jpg", type:"petrol", cons:6.5, range:615, tank:40, length:"4341 mm", trunk:"472 L", rearLeg:"870 mm", accel:"11.3 s", euroNCAP:"3 stars", adas:"AEB, Lane Assist", warranty:"3 yr" }
-    // Add more anytime - now over 50 models from all requested brands!
+    // Leapmotor C10 (from teslamagazin.sk)
+    { 
+        make: "Leapmotor", model: "C10", trim: "ProMax", year: 2025, bodyStyle: "SUV", driveType: "RWD", engineType: "Electric", displacement: "-", cylinders: "-", valvetrain: "-", aspiration: "-", horsepower: "220 kW", torque: "360 Nm", redline: "-", fuelType: "EV", batteryCapacity: "81.9 kWh", electricMotorPower: "-", combinedSystemPower: "220 kW", transmission: "-", zeroToHundred: "6.6 s", topSpeed: "190 km/h", fuelEconomy: "169 Wh/km", range: "510 km", length: "4739 mm", width: "1900 mm", height: "1680 mm", wheelbase: "2825 mm", trackFront: "-", trackRear: "-", groundClearance: "-", curbWeight: "-", gvwr: "-", towingCapacity: "-", payloadCapacity: "-", frontSuspension: "-", rearSuspension: "-", steeringType: "-", turningCircle: "-", brakeType: "-", wheelSize: "-", tireSize: "-", headroomFront: "-", headroomRear: "-", legroomFront: "-", legroomRear: "-", shoulderFront: "-", shoulderRear: "-", hipFront: "-", hipRear: "-", passengerVolume: "-", seatingCapacity: 5, cargoVolume: "435 L", cargoFolded: "1410 L", trunkOpeningWidth: "-", trunkOpeningHeight: "-", liftoverHeight: "-", fuelTank: "-", estimatedRange: "510 km", crashTestRatings: "-", standardSafety: "-", availableADAS: "-", screenSize: "-", appleCarPlay: "-", androidAuto: "-", audioSystem: "-", usbPorts: "-", num12VOutlets: "-", wirelessCharging: "-", seatMaterial: "-", powerSeats: "-", heatedSeats: "-", ventilatedSeats: "-", dualZoneClimate: "-", panoramicSunroof: "-", keylessEntry: "-", handsFreeLiftgate: "-", basePrice: "40 990 €", price: "40 990 €", img: "https://www.teslamagazin.sk/wp-content/uploads/2024/11/Leapmotor-C10-AWD.jpg", buyingLink: "https://www.teslamagazin.sk/leapmotor-c10-cena-promax-awd/" 
+    },
+    // Leapmotor B10 (from francetech.sk)
+    { 
+        make: "Leapmotor", model: "B10", trim: "Design Max 217k 67.1 kWh", year: 2025, bodyStyle: "SUV", driveType: "RWD", engineType: "-", displacement: "0", cylinders: "-", valvetrain: "-", aspiration: "-", horsepower: "217 hp", torque: "-", redline: "-", fuelType: "EV", batteryCapacity: "67.1 kWh", electricMotorPower: "160 kW", combinedSystemPower: "-", transmission: "Single-speed auto", zeroToHundred: "-", topSpeed: "-", fuelEconomy: "-", range: "-", length: "-", width: "-", height: "-", wheelbase: "-", trackFront: "-", trackRear: "-", groundClearance: "-", curbWeight: "-", gvwr: "-", towingCapacity: "-", payloadCapacity: "-", frontSuspension: "-", rearSuspension: "-", steeringType: "Power-assisted rack-and-pinion", turningCircle: "-", brakeType: "-", wheelSize: "-", tireSize: "-", headroomFront: "-", headroomRear: "-", legroomFront: "-", legroomRear: "-", shoulderFront: "-", shoulderRear: "-", hipFront: "-", hipRear: "-", passengerVolume: "-", seatingCapacity: 5, cargoVolume: "400 L", cargoFolded: "-", trunkOpeningWidth: "-", trunkOpeningHeight: "-", liftoverHeight: "-", fuelTank: "-", estimatedRange: "-", crashTestRatings: "-", standardSafety: "ABS, 6 airbags, ESP, TPMS", availableADAS: "Adaptive Cruise, Blind Spot", screenSize: "-", appleCarPlay: "-", androidAuto: "-", audioSystem: "Radio + USB + Bluetooth", usbPorts: "-", num12VOutlets: "-", wirelessCharging: "Yes", seatMaterial: "-", powerSeats: "-", heatedSeats: "Front", ventilatedSeats: "-", dualZoneClimate: "-", panoramicSunroof: "-", keylessEntry: "Yes", handsFreeLiftgate: "Yes", basePrice: "30 740 €", price: "30 740 €", img: "https://www.francetech.sk/ponuka-vozidiel/leapmotor-b10-design-max-217k-671-kwh-4/", buyingLink: "https://www.francetech.sk/ponuka-vozidiel/leapmotor-b10-design-max-217k-671-kwh-4/" 
+    },
+    // Peugeot 308 hatchback 2018 diesel 88kW (from autobazar.sk)
+    { 
+        make: "Peugeot", model: "308 Hatchback", trim: "-", year: 2018, bodyStyle: "Hatchback", driveType: "FWD", engineType: "Inline-4", displacement: "1.6L", cylinders: 4, valvetrain: "-", aspiration: "Turbo", horsepower: "120 PS / 88 kW @ 3500 rpm", torque: "300 Nm @ 1750 rpm", redline: "-", fuelType: "Diesel", batteryCapacity: "-", electricMotorPower: "-", combinedSystemPower: "-", transmission: "6-speed manual", zeroToHundred: "-", topSpeed: "-", fuelEconomy: "-", range: "-", length: "-", width: "-", height: "-", wheelbase: "-", trackFront: "-", trackRear: "-", groundClearance: "-", curbWeight: "-", gvwr: "-", towingCapacity: "-", payloadCapacity: "-", frontSuspension: "-", rearSuspension: "-", steeringType: "-", turningCircle: "-", brakeType: "-", wheelSize: "-", tireSize: "195/65 R15", headroomFront: "-", headroomRear: "-", legroomFront: "-", legroomRear: "-", shoulderFront: "-", shoulderRear: "-", hipFront: "-", hipRear: "-", passengerVolume: "-", seatingCapacity: 5, cargoVolume: "-", cargoFolded: "-", trunkOpeningWidth: "-", trunkOpeningHeight: "-", liftoverHeight: "-", fuelTank: "-", estimatedRange: "-", crashTestRatings: "5 stars Euro NCAP", standardSafety: "-", availableADAS: "Active Safety Brake", screenSize: "-", appleCarPlay: "-", androidAuto: "-", audioSystem: "-", usbPorts: "-", num12VOutlets: "-", wirelessCharging: "-", seatMaterial: "-", powerSeats: "-", heatedSeats: "-", ventilatedSeats: "-", dualZoneClimate: "-", panoramicSunroof: "-", keylessEntry: "-", handsFreeLiftgate: "-", basePrice: "8 990 €", price: "8 990 €", img: "https://peugeot-308.autobazar.sk/", buyingLink: "https://peugeot-308.autobazar.sk/" 
+    },
+    // VW ID.4 2022 (from vw.sk)
+    { 
+        make: "Volkswagen", model: "ID.4", trim: "Pure", year: 2022, bodyStyle: "SUV", driveType: "RWD", engineType: "Electric", displacement: "-", cylinders: "-", valvetrain: "-", aspiration: "-", horsepower: "-", torque: "-", redline: "-", fuelType: "EV", batteryCapacity: "-", electricMotorPower: "-", combinedSystemPower: "-", transmission: "-", zeroToHundred: "-", topSpeed: "-", fuelEconomy: "-", range: "-", length: "-", width: "-", height: "-", wheelbase: "-", trackFront: "-", trackRear: "-", groundClearance: "-", curbWeight: "-", gvwr: "-", towingCapacity: "-", payloadCapacity: "-", frontSuspension: "-", rearSuspension: "-", steeringType: "Rack-and-pinion", turningCircle: "-", brakeType: "-", wheelSize: "-", tireSize: "-", headroomFront: "-", headroomRear: "-", legroomFront: "-", legroomRear: "-", shoulderFront: "-", shoulderRear: "-", hipFront: "-", hipRear: "-", passengerVolume: "-", seatingCapacity: 5, cargoVolume: "-", cargoFolded: "-", trunkOpeningWidth: "-", trunkOpeningHeight: "-", liftoverHeight: "-", fuelTank: "-", estimatedRange: "-", crashTestRatings: "5 stars Euro NCAP", standardSafety: "Emergency Assist, ProActive Passenger Protection", availableADAS: "IQ.DRIVE, Travel Assist, Lane Keep, Parking Assist, Car2X, ACC, Surround View, AR HUD", screenSize: "-", appleCarPlay: "-", androidAuto: "-", audioSystem: "Harman Kardon, ID. Sound", usbPorts: "-", num12VOutlets: "-", wirelessCharging: "-", seatMaterial: "-", powerSeats: "-", heatedSeats: "-", ventilatedSeats: "-", dualZoneClimate: "-", panoramicSunroof: "Yes", keylessEntry: "Keyless Access", handsFreeLiftgate: "-", basePrice: "38 990 €", price: "38 990 €", img: "https://www.vw.sk/id4/id4/cenniky-a-katalogy", buyingLink: "https://www.vw.sk/id4/id4/cenniky-a-katalogy" 
+    },
+    // KGM Torres Hybrid (from ssangyongzilina.sk)
+    { 
+        make: "KGM", model: "Torres Hybrid", trim: "Clever FWD Automat", year: 2025, bodyStyle: "SUV", driveType: "FWD", engineType: "1.5 GDI TURBO HYBRID", displacement: "-", cylinders: "-", valvetrain: "-", aspiration: "Turbo", horsepower: "-", torque: "-", redline: "-", fuelType: "Hybrid", batteryCapacity: "-", electricMotorPower: "-", combinedSystemPower: "-", transmission: "Auto", zeroToHundred: "-", topSpeed: "-", fuelEconomy: "-", range: "-", length: "-", width: "-", height: "-", wheelbase: "-", trackFront: "-", trackRear: "-", groundClearance: "-", curbWeight: "-", gvwr: "-", towingCapacity: "-", payloadCapacity: "-", frontSuspension: "-", rearSuspension: "-", steeringType: "-", turningCircle: "-", brakeType: "-", wheelSize: "-", tireSize: "-", headroomFront: "-", headroomRear: "-", legroomFront: "-", legroomRear: "-", shoulderFront: "-", shoulderRear: "-", hipFront: "-", hipRear: "-", passengerVolume: "-", seatingCapacity: 5, cargoVolume: "-", cargoFolded: "-", trunkOpeningWidth: "-", trunkOpeningHeight: "-", liftoverHeight: "-", fuelTank: "-", estimatedRange: "-", crashTestRatings: "-", standardSafety: "-", availableADAS: "-", screenSize: "-", appleCarPlay: "-", androidAuto: "-", audioSystem: "-", usbPorts: "-", num12VOutlets: "-", wirelessCharging: "-", seatMaterial: "Textile", powerSeats: "-", heatedSeats: "-", ventilatedSeats: "-", dualZoneClimate: "-", panoramicSunroof: "-", keylessEntry: "-", handsFreeLiftgate: "-", basePrice: "37 460 €", price: "37 460 €", img: "https://www.ssangyongzilina.sk/torres", buyingLink: "https://www.ssangyongzilina.sk/torres" 
+    },
+    // Dacia Bigster Hybrid 155 (from dacia.sk)
+    { 
+        make: "Dacia", model: "Bigster Hybrid 155", trim: "-", year: 2025, bodyStyle: "SUV", driveType: "FWD", engineType: "Full hybrid ‒ benzín a elektrina", displacement: "-", cylinders: "-", valvetrain: "-", aspiration: "-", horsepower: "155 hp", torque: "205 Nm", redline: "-", fuelType: "Hybrid", batteryCapacity: "230 V", electricMotorPower: "-", combinedSystemPower: "155 hp", transmission: "-", zeroToHundred: "-", topSpeed: "-", fuelEconomy: "4.7–7.1 L/100 km", range: "-", length: "-", width: "-", height: "-", wheelbase: "-", trackFront: "-", trackRear: "-", groundClearance: "-", curbWeight: "-", gvwr: "-", towingCapacity: "-", payloadCapacity: "-", frontSuspension: "-", rearSuspension: "-", steeringType: "-", turningCircle: "-", brakeType: "-", wheelSize: "19\"", tireSize: "-", headroomFront: "Max", headroomRear: "Max", legroomFront: "Max", legroomRear: "Max", shoulderFront: "-", shoulderRear: "-", hipFront: "-", hipRear: "-", passengerVolume: "-", seatingCapacity: 5, cargoVolume: "702 L", cargoFolded: "-", trunkOpeningWidth: "-", trunkOpeningHeight: "-", liftoverHeight: "-", fuelTank: "-", estimatedRange: "-", crashTestRatings: "Meets latest EU standards", standardSafety: "AEB, Sign Recognition, Lane Departure Warning, Lane Keep Assist", availableADAS: "Adaptive Cruise, Auto High Beam, Advanced AEB (pedestrians, cyclists, junctions), Lane Departure Warning with Correction, Sign Recognition with Overspeed Warning, Multi-view Camera", screenSize: "10\"", appleCarPlay: "-", androidAuto: "-", audioSystem: "Arkamys 3D Sound System 6 speakers", usbPorts: "USB sockets", num12VOutlets: "-", wirelessCharging: "Wi-Fi", seatMaterial: "-", powerSeats: "Driver 6-way electric", heatedSeats: "-", ventilatedSeats: "-", dualZoneClimate: "Yes", panoramicSunroof: "Yes", keylessEntry: "-", handsFreeLiftgate: "Electric", basePrice: "22 290 €", price: "22 290 €", img: "https://www.dacia.sk/hybridne-elektricke-vozidla/bigster-suv.html", buyingLink: "https://www.dacia.sk/hybridne-elektricke-vozidla/bigster-suv.html" 
+    },
+    // Tesla Model Y 2022 (from tesla.com/sk_sk, supplemented from search)
+    { 
+        make: "Tesla", model: "Model Y", trim: "Long Range AWD", year: 2022, bodyStyle: "SUV", driveType: "AWD", engineType: "Electric", displacement: "-", cylinders: "-", valvetrain: "-", aspiration: "-", horsepower: "295 hp", torque: "339 lb-ft", redline: "-", fuelType: "EV", batteryCapacity: "77 kWh", electricMotorPower: "220 kW", combinedSystemPower: "-", transmission: "Single-speed", zeroToHundred: "5.2 s", topSpeed: "217 km/h", fuelEconomy: "-", range: "528 km", length: "4751 mm", width: "1921 mm", height: "1624 mm", wheelbase: "2890 mm", trackFront: "1637 mm", trackRear: "1624 mm", groundClearance: "167 mm", curbWeight: "2003 kg", gvwr: "2549 kg", towingCapacity: "1600 kg", payloadCapacity: "546 kg", frontSuspension: "Double wishbone", rearSuspension: "Multi-link", steeringType: "Rack-and-pinion", turningCircle: "12.5 m", brakeType: "Disc/disc", wheelSize: "19\"", tireSize: "255/45R19", headroomFront: "1041 mm", headroomRear: "1003 mm", legroomFront: "1060 mm", legroomRear: "980 mm", shoulderFront: "1420 mm", shoulderRear: "1330 mm", hipFront: "1360 mm", hipRear: "1300 mm", passengerVolume: "3.1 m³", seatingCapacity: 5, cargoVolume: "854 L", cargoFolded: "2047 L", trunkOpeningWidth: "-", trunkOpeningHeight: "-", liftoverHeight: "-", fuelTank: "-", estimatedRange: "528 km", crashTestRatings: "5 stars Euro NCAP", standardSafety: "8 airbags, ABS, ESC, AEB", availableADAS: "Autopilot, FSD option", screenSize: "15\"", appleCarPlay: "No", androidAuto: "No", audioSystem: "14 speakers", usbPorts: "2", num12VOutlets: "1", wirelessCharging: "Yes", seatMaterial: "Vegan leather", powerSeats: "Front", heatedSeats: "All", ventilatedSeats: "Front", dualZoneClimate: "Yes", panoramicSunroof: "Glass roof", keylessEntry: "Yes", handsFreeLiftgate: "Yes", basePrice: "33 990 €", price: "33 990 €", img: "https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,c_fit,f_auto,q_auto:best/Model-Y-Hero-Desktop", buyingLink: "https://www.tesla.com/sk_sk/modely/model-y" 
+    },
+    // Hyundai Ioniq 5 77kWh (from hyundai.sk)
+    { 
+        make: "Hyundai", model: "Ioniq 5", trim: "Long Range", year: 2025, bodyStyle: "CUV", driveType: "AWD", engineType: "Electric", displacement: "-", cylinders: "-", valvetrain: "-", aspiration: "-", horsepower: "-", torque: "-", redline: "-", fuelType: "EV", batteryCapacity: "72.6 kWh", electricMotorPower: "-", combinedSystemPower: "-", transmission: "-", zeroToHundred: "5.2 s", topSpeed: "-", fuelEconomy: "-", range: "481 km", length: "-", width: "-", height: "-", wheelbase: "-", trackFront: "-", trackRear: "-", groundClearance: "-", curbWeight: "-", gvwr: "-", towingCapacity: "-", payloadCapacity: "-", frontSuspension: "-", rearSuspension: "-", steeringType: "-", turningCircle: "-", brakeType: "-", wheelSize: "-", tireSize: "-", headroomFront: "-", headroomRear: "-", legroomFront: "-", legroomRear: "-", shoulderFront: "-", shoulderRear: "-", hipFront: "-", hipRear: "-", passengerVolume: "-", seatingCapacity: 5, cargoVolume: "-", cargoFolded: "-", trunkOpeningWidth: "-", trunkOpeningHeight: "-", liftoverHeight: "-", fuelTank: "-", estimatedRange: "481 km", crashTestRatings: "-", standardSafety: "-", availableADAS: "-", screenSize: "-", appleCarPlay: "-", androidAuto: "-", audioSystem: "-", usbPorts: "-", num12VOutlets: "-", wirelessCharging: "-", seatMaterial: "-", powerSeats: "-", heatedSeats: "-", ventilatedSeats: "-", dualZoneClimate: "-", panoramicSunroof: "-", keylessEntry: "-", handsFreeLiftgate: "-", basePrice: "39 990 €", price: "39 990 €", img: "https://www.hyundai.sk/modely/ioniq-5", buyingLink: "https://www.hyundai.sk/modely/ioniq-5" 
+    },
+    // Hyundai Tucson Hybrid (from hyundai.sk)
+    { 
+        make: "Hyundai", model: "Tucson Hybrid", trim: "-", year: 2025, bodyStyle: "SUV", driveType: "-", engineType: "-", displacement: "-", cylinders: "-", valvetrain: "-", aspiration: "-", horsepower: "-", torque: "-", redline: "-", fuelType: "Hybrid", batteryCapacity: "-", electricMotorPower: "-", combinedSystemPower: "-", transmission: "-", zeroToHundred: "-", topSpeed: "-", fuelEconomy: "-", range: "-", length: "-", width: "-", height: "-", wheelbase: "-", trackFront: "-", trackRear: "-", groundClearance: "-", curbWeight: "-", gvwr: "-", towingCapacity: "-", payloadCapacity: "-", frontSuspension: "-", rearSuspension: "-", steeringType: "-", turningCircle: "-", brakeType: "-", wheelSize: "-", tireSize: "-", headroomFront: "-", headroomRear: "-", legroomFront: "-", legroomRear: "-", shoulderFront: "-", shoulderRear: "-", hipFront: "-", hipRear: "-", passengerVolume: "-", seatingCapacity: 5, cargoVolume: "-", cargoFolded: "-", trunkOpeningWidth: "-", trunkOpeningHeight: "-", liftoverHeight: "-", fuelTank: "-", estimatedRange: "-", crashTestRatings: "-", standardSafety: "Highway Driving Assist 1.5, Blind Spot View Monitor", availableADAS: "Highway Driving Assist 1.5", screenSize: "12.3\"", appleCarPlay: "-", androidAuto: "-", audioSystem: "-", usbPorts: "-", num12VOutlets: "-", wirelessCharging: "-", seatMaterial: "-", powerSeats: "-", heatedSeats: "-", ventilatedSeats: "-", dualZoneClimate: "-", panoramicSunroof: "-", keylessEntry: "Digital Key 2", handsFreeLiftgate: "-", basePrice: "26 690 €", price: "26 690 €", img: "https://www.hyundai.sk/modely/tucson", buyingLink: "https://www.hyundai.sk/modely/tucson" 
+    },
+    // Kia EV5 (from mojektromobil.sk)
+    { 
+        make: "Kia", model: "EV5", trim: "GT", year: 2025, bodyStyle: "SUV", driveType: "AWD", engineType: "Electric", displacement: "-", cylinders: "-", valvetrain: "-", aspiration: "-", horsepower: "313 hp", torque: "-", redline: "-", fuelType: "EV", batteryCapacity: "88.1 kWh", electricMotorPower: "215 kW rear / 98 kW front", combinedSystemPower: "313 hp", transmission: "-", zeroToHundred: "<6.5 s", topSpeed: "-", fuelEconomy: "-", range: "720 km", length: "4615 mm", width: "1875 mm", height: "1715 mm", wheelbase: "-", trackFront: "-", trackRear: "-", groundClearance: "-", curbWeight: "-", gvwr: "-", towingCapacity: "-", payloadCapacity: "-", frontSuspension: "-", rearSuspension: "-", steeringType: "-", turningCircle: "-", brakeType: "-", wheelSize: "-", tireSize: "-", headroomFront: "-", headroomRear: "-", legroomFront: "-", legroomRear: "-", shoulderFront: "-", shoulderRear: "-", hipFront: "-", hipRear: "-", passengerVolume: "-", seatingCapacity: 5, cargoVolume: "-", cargoFolded: "-", trunkOpeningWidth: "-", trunkOpeningHeight: "-", liftoverHeight: "-", fuelTank: "-", estimatedRange: "720 km", crashTestRatings: "-", standardSafety: "-", availableADAS: "-", screenSize: "12.3\" (dual) + 5\"", appleCarPlay: "-", androidAuto: "-", audioSystem: "-", usbPorts: "-", num12VOutlets: "-", wirelessCharging: "-", seatMaterial: "-", powerSeats: "-", heatedSeats: "-", ventilatedSeats: "-", dualZoneClimate: "-", panoramicSunroof: "-", keylessEntry: "-", handsFreeLiftgate: "-", basePrice: "-", price: "-", img: "https://www.mojelektromobil.sk/wp-content/uploads/2024/07/kia-ev5-gt.jpg", buyingLink: "https://www.mojelektromobil.sk/kia-ev5-gt-novinka/" 
+    }
 ];
 
 let selectedCars = [];
@@ -229,7 +136,7 @@ const select = document.getElementById('carSelect');
 carDatabase.forEach((car, i) => {
     const opt = document.createElement('option');
     opt.value = i;
-    opt.textContent = `${car.make} ${car.model} • ${car.price}`;
+    opt.textContent = `${car.make} ${car.model} (${car.year}) • ${car.basePrice}`;
     select.appendChild(opt);
 });
 
@@ -250,27 +157,120 @@ function render() {
     const grid = document.getElementById('comparison');
     grid.innerHTML = selectedCars.map((idx, pos) => {
         const car = carDatabase[idx];
-        const fillCost = car.type === 'ev' ? (car.battery * elec).toFixed(2) : 
-                        car.type === 'diesel' ? (car.tank * diesel).toFixed(2) : 
-                        (car.tank * petrol).toFixed(2);
+        const isEV = car.fuelType === 'EV';
+        const isDiesel = car.fuelType === 'Diesel';
+        const isHybrid = car.fuelType === 'Hybrid';
+        const fillCost = isEV ? (parseFloat(car.batteryCapacity || 0) * elec).toFixed(2) : 
+                         isDiesel ? (parseFloat(car.fuelTank || 0) * diesel).toFixed(2) : 
+                         (parseFloat(car.fuelTank || 0) * petrol).toFixed(2);
+        const categories = [
+            { title: "1. General / Identification", params: [
+                {k: "Make & Model", v: `${car.make} ${car.model}`},
+                {k: "Trim / Variant", v: car.trim || "-"},
+                {k: "Model year", v: car.year},
+                {k: "Body style", v: car.bodyStyle},
+                {k: "Drive type", v: car.driveType}
+            ]},
+            { title: "2. Engine & Performance", params: [
+                {k: "Engine type", v: car.engineType},
+                {k: "Displacement", v: car.displacement},
+                {k: "Number of cylinders", v: car.cylinders},
+                {k: "Valvetrain", v: car.valvetrain},
+                {k: "Aspiration", v: car.aspiration},
+                {k: "Horsepower", v: car.horsepower},
+                {k: "Torque", v: car.torque},
+                {k: "Redline", v: car.redline},
+                {k: "Fuel type", v: car.fuelType},
+                {k: "Battery capacity", v: car.batteryCapacity},
+                {k: "Electric motor power", v: car.electricMotorPower},
+                {k: "Combined system power", v: car.combinedSystemPower},
+                {k: "Transmission type", v: car.transmission},
+                {k: "0–100 km/h time", v: car.zeroToHundred},
+                {k: "Top speed", v: car.topSpeed},
+                {k: "Fuel economy / range", v: `${car.fuelEconomy} / ${car.range} km`},
+                {k: "Full fill/charge cost", v: `€${fillCost}`, highlight: true}
+            ]},
+            { title: "3. Dimensions & Weight", params: [
+                {k: "Length", v: car.length},
+                {k: "Width", v: car.width},
+                {k: "Height", v: car.height},
+                {k: "Wheelbase", v: car.wheelbase},
+                {k: "Track width (front/rear)", v: `${car.trackFront || '-'} / ${car.trackRear || '-'}`},
+                {k: "Ground clearance", v: car.groundClearance},
+                {k: "Curb weight", v: car.curbWeight},
+                {k: "GVWR", v: car.gvwr},
+                {k: "Towing capacity", v: car.towingCapacity},
+                {k: "Payload capacity", v: car.payloadCapacity}
+            ]},
+            { title: "4. Chassis & Suspension", params: [
+                {k: "Front suspension", v: car.frontSuspension},
+                {k: "Rear suspension", v: car.rearSuspension},
+                {k: "Steering type", v: car.steeringType},
+                {k: "Turning circle", v: car.turningCircle},
+                {k: "Brake type", v: car.brakeType},
+                {k: "Wheel size", v: car.wheelSize},
+                {k: "Tire size", v: car.tireSize}
+            ]},
+            { title: "5. Interior Dimensions", params: [
+                {k: "Headroom front / rear", v: `${car.headroomFront || '-'} / ${car.headroomRear || '-'}`},
+                {k: "Legroom front / rear", v: `${car.legroomFront || '-'} / ${car.legroomRear || '-'}`},
+                {k: "Shoulder room front / rear", v: `${car.shoulderFront || '-'} / ${car.shoulderRear || '-'}`},
+                {k: "Hip room front / rear", v: `${car.hipFront || '-'} / ${car.hipRear || '-'}`},
+                {k: "Passenger volume", v: car.passengerVolume},
+                {k: "Seating capacity", v: car.seatingCapacity}
+            ]},
+            { title: "6. Cargo / Trunk Space", params: [
+                {k: "Cargo volume behind rear seats", v: car.cargoVolume},
+                {k: "Cargo volume with seats folded", v: car.cargoFolded},
+                {k: "Trunk/liftgate opening width & height", v: `${car.trunkOpeningWidth || '-'} x ${car.trunkOpeningHeight || '-'}`},
+                {k: "Liftover height", v: car.liftoverHeight}
+            ]},
+            { title: "7. Fuel Tank & Range", params: [
+                {k: "Fuel tank capacity", v: car.fuelTank},
+                {k: "Estimated range", v: car.estimatedRange}
+            ]},
+            { title: "8. Safety & Driver Assistance", params: [
+                {k: "Crash test ratings", v: car.crashTestRatings},
+                {k: "Standard safety features", v: car.standardSafety},
+                {k: "Available ADAS", v: car.availableADAS}
+            ]},
+            { title: "9. Infotainment & Features", params: [
+                {k: "Screen size", v: car.screenSize},
+                {k: "Apple CarPlay / Android Auto", v: `${car.appleCarPlay || '-'} / ${car.androidAuto || '-'}`},
+                {k: "Audio system", v: car.audioSystem},
+                {k: "Number of USB ports, 12V outlets, wireless charging", v: `${car.usbPorts || '-'} USB, ${car.num12VOutlets || '-'} 12V, ${car.wirelessCharging || '-'}`}
+            ]},
+            { title: "10. Comfort & Convenience", params: [
+                {k: "Seat material", v: car.seatMaterial},
+                {k: "Power seats, heated/ventilated", v: `${car.powerSeats || '-'}, ${car.heatedSeats || '-'} / ${car.ventilatedSeats || '-'}`},
+                {k: "Dual-zone climate control", v: car.dualZoneClimate},
+                {k: "Panoramic sunroof", v: car.panoramicSunroof},
+                {k: "Keyless entry & start", v: car.keylessEntry},
+                {k: "Hands-free power liftgate", v: car.handsFreeLiftgate}
+            ]},
+            { title: "11. Pricing (MSRP)", params: [
+                {k: "Base price", v: car.basePrice},
+                {k: "Price as-tested", v: car.price}
+            ]}
+        ];
         return `
             <div class="car-card">
                 <button class="remove-btn" onclick="removeCar(${pos})">X</button>
                 <div class="car-header">
-                    <h3>${car.make} ${car.model}</h3>
-                    <div class="price">${car.price}</div>
+                    <h3>${car.make} ${car.model} (${car.year})</h3>
+                    <div class="price">${car.basePrice}</div>
                 </div>
                 <img src="${car.img}" class="car-img" alt="${car.model}" onerror="this.src='https://via.placeholder.com/420x220/333/fff?text=${car.make}+${car.model.split(' ')[0]}'">
                 <div class="specs">
-                    <div class="param highlight"><strong>Full fill/charge</strong> <span>€${fillCost}</span></div>
-                    <div class="param"><strong>Consumption</strong> <span>${car.cons} ${car.type==='ev'?'kWh':'L'}/100km</span></div>
-                    <div class="param"><strong>Range</strong> <span>${car.range} km</span></div>
-                    <div class="param"><strong>0–100 km/h</strong> <span>${car.accel}</span></div>
-                    <div class="param"><strong>Trunk</strong> <span>${car.trunk}</span></div>
-                    <div class="param"><strong>Rear legroom</strong> <span>${car.rearLeg}</span></div>
-                    <div class="param"><strong>Euro NCAP</strong> <span>${car.euroNCAP}</span></div>
-                    <div class="param"><strong>ADAS</strong> <span style="font-size:0.9em">${car.adas}</span></div>
-                    <div class="param"><strong>Warranty</strong> <span>${car.warranty}</span></div>
+                    ${categories.map(cat => `
+                        <div class="category">
+                            <div class="category-title" onclick="this.classList.toggle('open'); this.parentElement.classList.toggle('open')">${cat.title}</div>
+                            <div class="category-content">
+                                ${cat.params.map(p => `<div class="param${p.highlight ? ' highlight' : ''}"><strong>${p.k}:</strong> <span>${p.v || '-'}</span></div>`).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                    ${car.buyingLink ? `<div class="buying-link"><a href="${car.buyingLink}" target="_blank">Buy Now</a></div>` : ''}
                 </div>
             </div>
         `;
@@ -278,14 +278,10 @@ function render() {
 }
 
 // Update prices live
-document.querySelectorAll('input').forEach(input => {
-    input.addEventListener('input', e => {
-        if (e.target.id === 'petrol') petrol = +e.target.value || 1.55;
-        if (e.target.id === 'diesel') diesel = +e.target.value || 1.52;
-        if (e.target.id === 'elec') elec = +e.target.value || 0.191;
-        render();
-    });
-});
+document.getElementById('petrol').addEventListener('input', e => { petrol = +e.target.value || 1.55; render(); });
+document.getElementById('diesel').addEventListener('input', e => { diesel = +e.target.value || 1.52; render(); });
+document.getElementById('elec').addEventListener('input', e => { elec = +e.target.value || 0.191; render(); });
 </script>
 </body>
 </html>
+```FreeLift
