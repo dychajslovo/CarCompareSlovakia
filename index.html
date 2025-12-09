@@ -9,98 +9,122 @@
         :root { --primary: #0066ff; --dark: #222; --red: #d00; }
         * { box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; background: #f8f9fa; line-height: 1.6; }
-        h1 { text-align: center; padding: 20px; margin: 0; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); color: #222; }
+        h1 { text-align: center; padding: 16px; margin: 0; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); color: #222; font-size: 1.4em; }
 
         .controls {
-            text-align: center; padding: 20px; background: white; margin: 15px 10px; border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center; padding: 16px; background: white; margin: 10px 8px; border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         select, button {
-            padding: 14px; margin: 8px; font-size: 1.1em; border-radius: 8px; border: 1px solid #ccc;
+            padding: 12px; margin: 6px; font-size: 1em; border-radius: 8px; border: 1px solid #ccc;
         }
-        select { width: 70%; max-width: 400px; }
-        button { background: var(--primary); color: white; border: none; cursor: pointer; width: 70%; max-width: 400px; }
+        select { width: 90%; max-width: 400px; }
+        button { background: var(--primary); color: white; border: none; cursor: pointer; width: 90%; max-width: 400px; }
         button:hover { background: #0052cc; }
 
         .comparison-container {
             overflow-x: auto;
             display: flex;
-            gap: 20px;
-            padding: 15px 10px;
+            gap: 16px;
+            padding: 12px 8px;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
         }
-        .comparison-container::-webkit-scrollbar { height: 10px; }
+        .comparison-container::-webkit-scrollbar { height: 8px; }
         .comparison-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         .comparison-container::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
 
         .car-card {
             background: white;
-            min-width: 360px;
-            max-width: 420px;
-            border-radius: 18px;
+            min-width: 300px;
+            max-width: 380px;
+            border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 6px 20px rgba(0,0,0,0.12);
             position: relative;
             flex-shrink: 0;
             scroll-snap-align: start;
         }
+
+        /* FIXED HEADER INSIDE EACH CARD */
         .car-header {
             background: linear-gradient(135deg, #1a1a1a, #333);
             color: white;
-            padding: 18px;
+            padding: 14px;
             text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        .car-header h3 { margin: 0; font-size: 1.35em; }
-        .price { font-size: 1.7em; font-weight: bold; color: #ff3366; margin: 10px 0 0; }
-        .car-img { width: 100%; height: 220px; object-fit: cover; }
+        .car-header h3 { margin: 0; font-size: 1.25em; line-height: 1.2; }
+        .price { font-size: 1.5em; font-weight: bold; color: #ff3366; margin: 6px 0 0; }
+
+        .car-img { width: 100%; height: 180px; object-fit: cover; }
         .remove-btn {
-            position: absolute; top: 12px; right: 12px; background: #c00; color: white;
-            border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 22px; cursor: pointer;
+            position: absolute; top: 10px; right: 10px; background: #c00; color: white;
+            border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 20px; cursor: pointer; z-index: 11;
         }
-        .specs { padding: 16px; }
-        .category { margin-bottom: 20px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
+
+        .specs { padding: 12px; padding-top: 8px; }
+        .category { margin-bottom: 16px; border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
         .category-title {
-            padding: 12px 16px; margin: 0; font-weight: bold; background: #f0f0f0; color: #333;
-            cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 14px; margin: 0; font-weight: bold; background: #f0f0f0; color: #333;
+            cursor: pointer; user-select: none; font-size: 0.95em;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .category-title::after { content: "+"; font-size: 1.5em; transition: transform 0.3s; }
-        .category-title.open::after { transform: rotate(45deg); content: "−"; }
+        .category-title::after { content: "+"; font-size: 1.4em; transition: transform 0.3s; }
+        .category-title.open::after { transform: rotate(45deg); content: "-"; }
         .category-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: white; }
-        .category.open .category-content { max-height: 1200px; }
-        .param { display: flex; justify-content: space-between; padding: 8px 16px; border-bottom: 1px solid #f5f5f5; font-size: 0.95em; }
+        .category.open .category-content { max-height: 1500px; }
+        .param {
+            display: flex; justify-content: space-between; padding: 8px 14px; border-bottom: 1px solid #f8f8f8;
+            font-size: 0.9em;
+        }
         .param:last-child { border-bottom: none; }
-        .param strong { color: #333; }
+        .param strong { color: #333; font-size: 0.92em; }
         .highlight { background: #fffbe6; font-weight: bold; }
-        .buying-link { text-align: center; padding: 12px; background: #e8f5e8; }
+        .buying-link { text-align: center; padding: 10px; background: #e8f5e8; font-size: 0.95em; }
         .buying-link a { color: var(--primary); text-decoration: none; font-weight: bold; }
-        .footer { text-align: center; padding: 30px; color: #555; }
-        .count { text-align: center; font-weight: bold; color: #0066ff; margin: 10px 0; }
+
+        .footer { text-align: center; padding: 30px; color: #555; font-size: 0.9em; }
+        .count { text-align: center; font-weight: bold; color: #0066ff; margin: 8px 0; font-size: 1.1em; }
+
+        @media (max-width: 380px) {
+            .car-card { min-width: 290px; }
+            .car-header h3 { font-size: 1.15em; }
+            .price { font-size: 1.4em; }
+            .param { font-size: 0.85em; padding: 7px 12px; }
+            .category-title { padding: 10px 12px; font-size: 0.9em; }
+        }
     </style>
 </head>
 <body>
 
-<h1>Car Comparison — Slovakia Market (December 2025)</h1>
+<h1>Car Comparison Slovakia 2025</h1>
 
 <div class="controls">
     <select id="carSelect"><option value="">— Select a car to compare —</option></select>
     <button onclick="addCar()">Add to Compare</button>
     <div class="count" id="count">0 cars selected</div>
-    <div style="margin-top:10px;">
-        Petrol €/L: <input type="number" step="0.01" value="1.55" id="petrol" style="width:80px;">
-        Diesel €/L: <input type="number" step="0.01" value="1.52" id="diesel" style="width:80px;">
-        Electricity €/kWh: <input type="number" step="0.001" value="0.191" id="elec" style="width:90px;">
+    <div style="margin-top:10px; font-size:0.95em;">
+        Petrol €/L: <input type="number" step="0.01" value="1.55" id="petrol" style="width:70px;">
+        Diesel €/L: <input type="number" step="0.01" value="1.52" id="diesel" style="width:70px;">
+        Electricity €/kWh: <input type="number" step="0.001" value="0.191" id="elec" style="width:80px;">
     </div>
 </div>
 
 <div class="comparison-container" id="comparison"></div>
 
 <div class="footer">
-    Swipe left/right to compare • Real Slovak prices & specs • December 2025
+    Swipe to compare • Fixed car name at top • Real Slovak prices • Dec 2025
 </div>
 
 <script>
-// Load cars from external file
+let openCategories = new Set();
+let selectedCars = [];
+let petrol = 1.55, diesel = 1.52, elec = 0.191;
+
 const select = document.getElementById('carSelect');
 carDatabase.forEach((car, i) => {
     const opt = document.createElement('option');
@@ -108,9 +132,6 @@ carDatabase.forEach((car, i) => {
     opt.textContent = `${car.make} ${car.model} (${car.year}) • ${car.basePrice}`;
     select.appendChild(opt);
 });
-
-let selectedCars = [];
-let petrol = 1.55, diesel = 1.52, elec = 0.191;
 
 function addCar() {
     const idx = select.value;
@@ -124,6 +145,13 @@ function removeCar(i) {
     render();
 }
 
+function toggleCategory(carIndex, catIndex) {
+    const key = catIndex;
+    if (openCategories.has(key)) openCategories.delete(key);
+    else openCategories.add(key);
+    render();
+}
+
 function render() {
     document.getElementById('count').textContent = `${selectedCars.length}/20 cars selected`;
     const container = document.getElementById('comparison');
@@ -133,7 +161,7 @@ function render() {
                          car.fuelType === 'Diesel' ? (parseFloat(car.fuelTank || 0) * diesel).toFixed(2) :
                          (parseFloat(car.fuelTank || 0) * petrol).toFixed(2);
 
-        const categories = [
+          const categories = [
             { title: "1. General / Identification", params: [
                 {k: "Make & Model", v: `${car.make} ${car.model}`},
                 {k: "Trim / Variant", v: car.trim || "-"},
@@ -223,7 +251,6 @@ function render() {
                 {k: "Price as-tested", v: car.price}
             ]}
         ];
-
         return `
             <div class="car-card">
                 <button class="remove-btn" onclick="removeCar(${pos})">X</button>
@@ -231,16 +258,19 @@ function render() {
                     <h3>${car.make} ${car.model} (${car.year})</h3>
                     <div class="price">${car.basePrice}</div>
                 </div>
-                <img src="${car.img}" class="car-img" alt="${car.model}" onerror="this.src='https://via.placeholder.com/420x220/333/fff?text=${car.make}'">
+                <img src="${car.img}" class="car-img" alt="${car.model}" onerror="this.src='https://via.placeholder.com/420x180/333/fff?text=${car.make}'">
                 <div class="specs">
-                    ${categories.map(cat => `
-                        <div class="category">
-                            <div class="category-title" onclick="this.classList.toggle('open'); this.parentElement.classList.toggle('open')">${cat.title}</div>
-                            <div class="category-content">
-                                ${cat.params.map(p => `<div class="param${p.highlight ? ' highlight' : ''}"><strong>${p.k}:</strong> <span>${p.v || '-'}</span></div>`).join('')}
+                    ${categories.map((cat, catIdx) => {
+                        const isOpen = openCategories.has(catIdx);
+                        return `
+                            <div class="category ${isOpen ? 'open' : ''}">
+                                <div class="category-title" onclick="toggleCategory(${pos}, ${catIdx})">${cat.title}</div>
+                                <div class="category-content">
+                                    ${cat.params.map(p => `<div class="param${p.highlight ? ' highlight' : ''}"><strong>${p.k}:</strong> <span>${p.v || '-'}</span></div>`).join('')}
+                                </div>
                             </div>
-                        </div>
-                    `).join('')}
+                        `;
+                    }).join('')}
                     ${car.buyingLink ? `<div class="buying-link"><a href="${car.buyingLink}" target="_blank">Buy / Configure</a></div>` : ''}
                 </div>
             </div>
@@ -248,9 +278,12 @@ function render() {
     }).join('');
 }
 
+// Live price updates
 document.getElementById('petrol').addEventListener('input', e => { petrol = +e.target.value || 1.55; render(); });
 document.getElementById('diesel').addEventListener('input', e => { diesel = +e.target.value || 1.52; render(); });
 document.getElementById('elec').addEventListener('input', e => { elec = +e.target.value || 0.191; render(); });
+
+render();
 </script>
 </body>
 </html>
