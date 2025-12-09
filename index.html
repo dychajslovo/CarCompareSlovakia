@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Comparison - Slovakia Market</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .price-inputs { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }
+        .price-inputs label { display: block; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
+        .car-card { background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; }
+        .car-image { width: 100%; height: 200px; object-fit: cover; }
+        .car-name { text-align: center; padding: 10px; font-weight: bold; background: #ddd; }
+        .params-scroll { max-height: 600px; overflow-y: auto; padding: 10px; }
+        .group { margin-bottom: 15px; border-bottom: 1px solid #eee; }
+        .group h3 { margin: 0 0 10px 0; color: #333; }
+        .param { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .param-key { font-weight: bold; }
+        .param-value { text-align: right; }
+        .links { text-align: center; margin-top: 30px; }
+        .add-car { text-align: center; margin: 20px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Car Comparison Tool - Slovakia Market (Dec 2025)</h1>
+        <p>Compare up to 20 cars. Data sourced from public sites like carsized.com, official specs, and current Slovak prices.</p>
+    </div>
+
+    <div class="price-inputs">
+        <div>
+            <label>Petrol Price (€/L): <input type="number" id="petrolPrice" value="1.55" step="0.01" onchange="updateCosts()"></label>
+        </div>
+        <div>
+            <label>Diesel Price (€/L): <input type="number" id="dieselPrice" value="1.52" step="0.01" onchange="updateCosts()"></label>
+        </div>
+        <div>
+            <label>Electricity (€/kWh): <input type="number" id="elecPrice" value="0.191" step="0.001" onchange="updateCosts()"></label>
+        </div>
+    </div>
+
+    <div class="add-car">
+        <button onclick="addCar()">Add Another Car</button>
+        <p>(Pre-loaded: Skoda Octavia, VW Golf, Toyota Corolla, Tesla Model 3. Edit data.js to add more.)</p>
+    </div>
+
+    <div id="comparisonGrid" class="comparison-grid"></div>
+
+    <div class="links">
+        <h3>Vendor Links (Slovakia)</h3>
+        <p><a href="https://www.skoda.sk/" target="_blank">Škoda Dealers</a> | 
+           <a href="https://www.vw.sk/" target="_blank">Volkswagen Dealers</a> | 
+           <a href="https://www.toyota.sk/" target="_blank">Toyota Dealers</a> | 
+           <a href="https://www.tesla.com/sk_sk" target="_blank">Tesla Service</a></p>
+    </div>
+
+    <script>
+        // Data structure: Easy to add new cars or params here.
+        // Groups: car_size, interior, safety, tires, performance, etc.
+        // For new param: Add to relevant group in each car's data.
+        const carsData = [
+            {
+                name: "Škoda Octavia 2025 (1.5 TSI)",
+                image: "https://via.placeholder.com/300x200?text=Skoda+Octavia",
+                type: "petrol",
+                tankSize: 45, // L
+                consumption: 6.1, // L/100km
+                range: 738, // km
+                price: 29980, // EUR
+                serviceAnnual: 500, // EUR
+                warranty: "2 years / 100,000 km",
+                acceleration: "10.4 s (0-100 km/h)",
+                topSpeed: "214 km/h",
+                tireSize: "205/55 R16",
+                cabinNoise: "65 dB @ 100 km/h",
+                roofRails: "Optional",
+                rearLegroom: "941 mm (knee room)",
+                euroNCAP: "5 stars",
+                adas: ["Lane Assist", "AEB", "Adaptive Cruise"],
+                features: ["Apple CarPlay", "10\" Infotainment", "LED Lights"],
+                groups: {
+                    car_size: { length: "4689 mm", width: "1829 mm", height: "1470 mm", wheelbase: "2686 mm", groundClearance: "132 mm", cargo: "600 L" },
+                    interior: { cargoFolded: "1555 L", rearLegroom: "941 mm", cabinNoise: "65 dB" },
+                    safety: { euroNCAP: "5 stars", adas: "Lane Assist, AEB, Adaptive Cruise" },
+                    tires: { size: "205/55 R16" },
+                    performance: { acceleration: "10.4 s", topSpeed: "214 km/h" },
+                    other: { warranty: "2 years", roofRails: "Optional", features: "Apple CarPlay, LED Lights" }
+                }
+            },
+            {
+                name: "Volkswagen Golf 2025 (2.0 TSI)",
+                image: "https://via.placeholder.com/300x200?text=VW+Golf",
+                type: "petrol",
+                tankSize: 50, // L
+                consumption: 7.0, // L/100km
+                range: 714, // km
+                price: 25000, // EUR
+                serviceAnnual: 580, // EUR
+                warranty: "2 years / 100,000 km",
+                acceleration: "8.5 s (0-100 km/h)",
+                topSpeed: "230 km/h",
+                tireSize: "205/55 R16",
+                cabinNoise: "64 dB @ 100 km/h",
+                roofRails: "No",
+                rearLegroom: "889 mm (knee room)",
+                euroNCAP: "5 stars",
+                adas: ["IQ.DRIVE", "AEB", "Lane Keep"],
+                features: ["Digital Cockpit", "Wireless Charging", "Panoramic Roof"],
+                groups: {
+                    car_size: { length: "4284 mm", width: "1789 mm", height: "1461 mm", wheelbase: "2636 mm", groundClearance: "124 mm", cargo: "380 L" },
+                    interior: { cargoFolded: "1270 L", rearLegroom: "889 mm", cabinNoise: "64 dB" },
+                    safety: { euroNCAP: "5 stars", adas: "IQ.DRIVE, AEB, Lane Keep" },
+                    tires: { size: "205/55 R16" },
+                    performance: { acceleration: "8.5 s", topSpeed: "230 km/h" },
+                    other: { warranty: "2 years", roofRails: "No", features: "Digital Cockpit, Wireless Charging" }
+                }
+            },
+            {
+                name: "Toyota Corolla 2025 (Hybrid)",
+                image: "https://via.placeholder.com/300x200?text=Toyota+Corolla",
+                type: "hybrid", // Treat as petrol for fill
+                tankSize: 50, // L
+                consumption: 4.5, // L/100km equiv
+                range: 1111, // km
+                price: 19640, // EUR
+                serviceAnnual: 335, // EUR
+                warranty: "3 years / 100,000 km",
+                acceleration: "7.5 s (0-100 km/h)",
+                topSpeed: "180 km/h",
+                tireSize: "195/65 R15",
+                cabinNoise: "62 dB @ 100 km/h",
+                roofRails: "Optional",
+                rearLegroom: "894 mm (knee room)",
+                euroNCAP: "5 stars",
+                adas: ["Toyota Safety Sense 3.0", "AEB", "Lane Tracing"],
+                features: ["Hybrid System", "8\" Touchscreen", "Adaptive Lights"],
+                groups: {
+                    car_size: { length: "4635 mm", width: "1780 mm", height: "1435 mm", wheelbase: "2700 mm", groundClearance: "130 mm", cargo: "371 L" },
+                    interior: { cargoFolded: "1094 L", rearLegroom: "894 mm", cabinNoise: "62 dB" },
+                    safety: { euroNCAP: "5 stars", adas: "TSS 3.0, AEB, Lane Tracing" },
+                    tires: { size: "195/65 R15" },
+                    performance: { acceleration: "7.5 s", topSpeed: "180 km/h" },
+                    other: { warranty: "3 years", roofRails: "Optional", features: "Hybrid, Touchscreen" }
+                }
+            },
+            {
+                name: "Tesla Model 3 2025 (Long Range)",
+                image: "https://via.placeholder.com/300x200?text=Tesla+Model+3",
+                type: "ev",
+                batteryCapacity: 79, // kWh usable
+                consumption: 16.5, // kWh/100km
+                range: 584, // km
+                price: 36990, // EUR
+                serviceAnnual: 350, // EUR
+                warranty: "4 years / 80,000 km (battery 8 years)",
+                acceleration: "4.9 s (0-100 km/h)",
+                topSpeed: "201 km/h",
+                tireSize: "235/45 R18",
+                cabinNoise: "60 dB @ 100 km/h",
+                roofRails: "No",
+                rearLegroom: "894 mm (knee room)",
+                euroNCAP: "5 stars",
+                adas: ["Autopilot", "FSD Option", "AEB", "Summon"],
+                features: ["15\" Touchscreen", "Premium Audio", "Heated Everything"],
+                groups: {
+                    car_size: { length: "4720 mm", width: "1850 mm", height: "1441 mm", wheelbase: "2875 mm", groundClearance: "140 mm", cargo: "425 L" },
+                    interior: { cargoFolded: "649 L", rearLegroom: "894 mm", cabinNoise: "60 dB" },
+                    safety: { euroNCAP: "5 stars", adas: "Autopilot, AEB, Summon" },
+                    tires: { size: "235/45 R18" },
+                    performance: { acceleration: "4.9 s", topSpeed: "201 km/h" },
+                    other: { warranty: "4 years", roofRails: "No", features: "Touchscreen, Premium Audio" }
+                }
+            }
+        ];
+
+        let cars = [...carsData]; // Copy to allow adding more
+
+        function renderGrid() {
+            const grid = document.getElementById('comparisonGrid');
+            grid.innerHTML = '';
+            cars.slice(0, 20).forEach(car => { // Limit to 20
+                const card = document.createElement('div');
+                card.className = 'car-card';
+                card.innerHTML = `
+                    <img src="${car.image}" alt="${car.name}" class="car-image">
+                    <div class="car-name">${car.name}</div>
+                    <div class="params-scroll">
+                        ${Object.entries(car.groups).map(([groupName, params]) => `
+                            <div class="group">
+                                <h3>${groupName.replace('_', ' ').toUpperCase()}</h3>
+                                ${Object.entries(params).map(([key, value]) => `
+                                    <div class="param">
+                                        <span class="param-key">${key.replace('_', ' ')}:</span>
+                                        <span class="param-value">${value}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `).join('')}
+                        <div class="group">
+                            <h3>ECONOMY & COST</h3>
+                            <div class="param"><span class="param-key">Consumption:</span><span class="param-value">${car.consumption} ${car.type === 'ev' ? 'kWh/100km' : 'L/100km'}</span></div>
+                            <div class="param"><span class="param-key">Range:</span><span class="param-value">${car.range} km</span></div>
+                            <div class="param"><span class="param-key">Tank/Battery:</span><span class="param-value">${car.tankSize || car.batteryCapacity} ${car.type === 'ev' ? 'kWh' : 'L'}</span></div>
+                            <div class="param"><span class="param-key">Full Fill Cost:</span><span class="param-value" id="fillCost-${cars.indexOf(car)}">€${calculateFillCost(car)}</span></div>
+                            <div class="param"><span class="param-key">Price (SK):</span><span class="param-value">€${car.price.toLocaleString()}</span></div>
+                            <div class="param"><span class="param-key">Annual Service:</span><span class="param-value">€${car.serviceAnnual}</span></div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            updateCosts();
+        }
+
+        function calculateFillCost(car) {
+            const petrol = parseFloat(document.getElementById('petrolPrice').value) || 1.55;
+            const diesel = parseFloat(document.getElementById('dieselPrice').value) || 1.52;
+            const elec = parseFloat(document.getElementById('elecPrice').value) || 0.191;
+            if (car.type === 'ev') {
+                return (car.batteryCapacity * elec).toFixed(2);
+            } else {
+                const price = car.type === 'diesel' ? diesel : petrol;
+                return (car.tankSize * price).toFixed(2);
+            }
+        }
+
+        function updateCosts() {
+            cars.forEach((car, index) => {
+                const elem = document.getElementById(`fillCost-${index}`);
+                if (elem) elem.textContent = `€${calculateFillCost(car)}`;
+            });
+        }
+
+        function addCar() {
+            // Placeholder: In real, prompt for new car data or load from form.
+            alert('To add a new car, edit the carsData array in the script and refresh.');
+            // Example: cars.push(newCarData);
+            // renderGrid();
+        }
+
+        // Initial render
+        renderGrid();
+    </script>
+</body>
+</html>
