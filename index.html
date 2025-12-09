@@ -5,171 +5,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Comparison Slovakia 2025</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
-        h1 { text-align: center; }
-        .controls { text-align: center; margin: 20px; }
-        .controls input { width: 80px; padding: 5px; margin: 0 5px; }
-        .comparison-container {
-            display: flex;
-            overflow-x: auto;
-            gap: 20px;
-            padding: 20px;
-            justify-content: center;
-            flex-wrap: nowrap;
+        body { font-family: Arial, sans-serif; margin: 0; background: #f8f9fa; padding: 20px 0; }
+        h1 { text-align: center; margin: 0 0 20px; }
+        .controls { text-align: center; margin-bottom: 20px; padding: 10px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .controls input { width: 90px; padding: 6px; margin: 0 5px; border: 1px solid #ccc; border-radius: 4px; }
+        .table-container { overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        table { width: 100%; min-width: 900px; border-collapse: collapse; background: white; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #eee; }
+        th.param { position: sticky; left: 0; background: #222; color: white; width: 280px; font-weight: normal; z-index: 10; }
+        th.car { background: #333; color: white; text-align: center; font-size: 1.1em; position: sticky; top: 0; z-index: 9; }
+        th.car img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-top: 8px; }
+        .price { font-size: 1.3em; font-weight: bold; color: #d00; }
+        .section { background: #f0f0f0; font-weight: bold; color: #333; }
+        .highlight { background: #fff8e1; }
+        .remove-btn { float: right; background: #c00; color: white; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 16px; }
+        @media (max-width: 768px) {
+            th.param { width: 200px; font-size: 0.9em; }
+            th.car, td { font-size: 0.9em; padding: 10px 8px; }
         }
-        @media (max-width: 1024px) { .comparison-container { flex-wrap: wrap; } }
-        .car-column {
-            min-width: 340px;
-            max-width: 380px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            overflow: hidden;
-            flex: 1;
-        }
-        .car-image {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-        }
-        .car-title {
-            text-align: center;
-            padding: 15px;
-            background: #222;
-            color: white;
-            font-size: 1.2em;
-            margin: 0;
-        }
-        .params {
-            max-height: 74vh;
-            overflow-y: auto;
-            padding: 15px;
-        }
-        .group {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-        .group h3 {
-            margin: 0 0 10px 0;
-            color: #333;
-            font-size: 1.1em;
-            background: #f0f0f0;
-            padding: 6px 10px;
-            border-radius: 4px;
-        }
-        .param {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
-            font-size: 0.95em;
-        }
-        .param strong { color: #333; }
-        .price { font-weight: bold; color: #d00; font-size: 1.2em; }
-        .remove-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        .add-car-btn {
-            padding: 12px 24px;
-            font-size: 1.1em;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        .add-car-btn:hover { background: #0056b3; }
     </style>
 </head>
 <body>
-    <h1>Car Comparison — Slovakia Market (December 2025)</h1>
 
-    <div class="controls">
-        <label>Petrol €/L: <input type="number" step="0.01" value="1.55" id="petrol"></label>
-        <label>Diesel €/L: <input type="number" step="0.01" value="1.52" id="diesel"></label>
-        <label>Electricity €/kWh: <input type="number" step="0.001" value="0.191" id="elec"></label>
-        <button class="add-car-btn" onclick="alert('Edit the carsData array in the code to add more cars!')">Add More Cars</button>
-    </div>
+<h1>Car Comparison — Slovakia Market (December 2025)</h1>
 
-    <div class="comparison-container" id="container"></div>
+<div class="controls">
+    <label>Petrol €/L: <input type="number" step="0.01" value="1.55" id="petrol"></label>
+    <label>Diesel €/L: <input type="number" step="0.01" value="1.52" id="diesel"></label>
+    <label>Electricity €/kWh: <input type="number" step="0.001" value="0.191" id="elec"></label>
+</div>
 
-    <script>
-        const carsData = [
-            { name: "Škoda Octavia 1.5 TSI (2025)", price: "29 980 €", image: "https://cdn.imaginecurve.com/cars/2025-skoda-octavia.jpg", type: "petrol", tank: 45, cons: 6.1, range: 738, fillCost: c=>(c.tank*petrol).toFixed(2), rearLeg: "941 mm", euroNCAP: "5★ 2024", adas: "Front Assist, Lane Assist, Adaptive Cruise, Side Assist", accel: "10.4 s", topSpeed: "214 km/h", tire: "205/55 R16", noise: "65 dB", roofRails: "Yes (optional)", warranty: "2 years unlimited km", service: "≈520 €/year" },
-            { name: "Volkswagen Golf 1.5 eTSI (2025)", price: "31 450 €", image: "https://cdn.imaginecurve.com/cars/2025-vw-golf.jpg", type: "petrol", tank: 45, cons: 5.8, range: 776, fillCost: c=>(c.tank*petrol).toFixed(2), rearLeg: "900 mm", euroNCAP: "5★ 2024", adas: "IQ.DRIVE Travel Assist, Emergency Assist, AEB", accel: "8.5 s", topSpeed: "224 km/h", tire: "205/55 R17", noise: "64 dB", roofRails: "No", warranty: "2 years", service: "≈590 €/year" },
-            { name: "Toyota Corolla 1.8 Hybrid (2025)", price: "28 990 €", image: "https://cdn.imaginecurve.com/cars/2025-toyota-corolla.jpg", type: "hybrid", tank: 43, cons: 4.2, range: 1024, fillCost: c=>(c.tank*petrol).toFixed(2), rearLeg: "894 mm", euroNCAP: "5★", adas: "Toyota Safety Sense 3, Pre-Collision, LTA", accel: "9.2 s", topSpeed: "180 km/h", tire: "205/60 R16", noise: "62 dB", roofRails: "Optional", warranty: "3+7 years (hybrid)", service: "≈340 €/year" },
-            { name: "Tesla Model 3 Long Range AWD (2025)", price: "44 990 €", image: "https://cdn.imaginecurve.com/cars/2025-tesla-model3.jpg", type: "ev", battery: 79, cons: 14.8, range: 629, fillCost: c=>(c.battery*elec).toFixed(2), rearLeg: "912 mm", euroNCAP: "5★", adas: "Autopilot, FSD capability, AEB, Blind Spot", accel: "4.4 s", topSpeed: "201 km/h", tire: "235/45 R18", noise: "59 dB", roofRails: "No", warranty: "4 years / 80 000 km (battery 8 years)", service: "≈300 €/year" }
-            // Add more cars here — just copy one object and change values
-        ];
+<div class="table-container">
+    <table id="comparisonTable">
+        <!-- JavaScript fills this -->
+    </table>
+</div>
 
-        let petrol = 1.55, diesel = 1.52, elec = 0.191;
+<script>
+const cars = [
+    { name: "Škoda Octavia 1.5 TSI", price: "29 980 €", img: "https://cdn.imaginecurve.com/cars/octavia.jpg", 
+      type:"petrol", tank:45, cons:6.1, range:738, fill:()=>(45*petrol).toFixed(2),
+      length:"4689 mm", width:"1829 mm", wheelbase:"2686 mm", trunk:"600 / 1555 L", rearLeg:"941 mm",
+      accel:"10.4 s", topSpeed:"214 km/h", power:"110 kW", torque:"250 Nm",
+      euroNCAP:"5★ (2024)", adas:"Front Assist, Lane Assist, Adaptive Cruise, Side Assist, Traffic Jam Assist",
+      tires:"205/55 R16", noise:"65 dB", roofRails:"Yes (optional)", warranty:"2 years unlimited km", service:"≈520 €/year" },
 
-        document.getElementById('petrol').addEventListener('input', e => { petrol = +e.target.value; updateCosts(); });
-        document.getElementById('diesel').addEventListener('input', e => { diesel = +e.target.value; updateCosts(); });
-        document.getElementById('elec').addEventListener('input', e => { elec = +e.target.value; updateCosts(); });
+    { name: "VW Golf 1.5 eTSI", price: "31 450 €", img: "https://cdn.imaginecurve.com/cars/golf.jpg",
+      type:"petrol", tank:45, cons:5.8, range:776, fill:()=>(45*petrol).toFixed(2),
+      length:"4284 mm", width:"1789 mm", wheelbase:"2636 mm", trunk:"381 / 1270 L", rearLeg:"900 mm",
+      accel:"8.5 s", topSpeed:"224 km/h", power:"110 kW", torque:"250 Nm",
+      euroNCAP:"5★ (2024)", adas:"IQ.DRIVE Travel Assist, Emergency Assist, AEB, Lane Keep",
+      tires:"205/55 R17", noise:"64 dB", roofRails:"No", warranty:"2 years", service:"≈590 €/year" },
 
-        function render() {
-            const container = document.getElementById('container');
-            container.innerHTML = '';
-            carsData.forEach((car, i) => {
-                const col = document.createElement('div');
-                col.className = 'car-column';
-                col.innerHTML = `
-                    <button class="remove-btn" onclick="removeCar(${i})">×</button>
-                    <img src="${car.image}" class="car-image" onerror="this.src='https://via.placeholder.com/400x220/333/fff?text=${encodeURIComponent(car.name)}'">
-                    <h2 class="car-title">${car.name}<br><span class="price">${car.price}</span></h2>
-                    <div class="params">
-                        <div class="group"><h3>Size & Space</h3>
-                            <div class="param"><strong>Rear legroom</strong> <span>${car.rearLeg}</span></div>
-                            <div class="param"><strong>Range (full)</strong> <span>${car.range} km</span></div>
-                        </div>
-                        <div class="group"><h3>Economy & Cost</h3>
-                            <div class="param"><strong>Consumption</strong> <span>${car.cons} ${car.type==='ev'?'kWh':'L'}/100 km</span></div>
-                            <div class="param"><strong>Full fill/charge</strong> <span id="cost${i}">€?</span></div>
-                        </div>
-                        <div class="group"><h3>Performance</h3>
-                            <div class="param"><strong>0-100 km/h</strong> <span>${car.accel}</span></div>
-                            <div class="param"><strong>Top speed</strong> <span>${car.topSpeed}</span></div>
-                        </div>
-                        <div class="group"><h3>Safety & ADAS</h3>
-                            <div class="param"><strong>Euro NCAP</strong> <span>${car.euroNCAP}</span></div>
-                            <div class="param"><strong>ADAS</strong> <span style="font-size:0.85em">${car.adas}</span></div>
-                        </div>
-                        <div class="group"><h3>Other</h3>
-                            <div class="param"><strong>Tires</strong> <span>${car.tire}</span></div>
-                            <div class="param"><strong>Cabin noise</strong> <span>${car.noise}</span></div>
-                            <div class="param"><strong>Roof rails</strong> <span>${car.roofRails}</span></div>
-                            <div class="param"><strong>Warranty</strong> <span style="font-size:0.85em">${car.warranty}</span></div>
-                            <div class="param"><strong>Service (avg)</strong> <span>${car.service}</span></div>
-                        </div>
-                    </div>`;
-                container.appendChild(col);
+    { name: "Toyota Corolla 1.8 Hybrid", price: "28 990 €", img: "https://cdn.imaginecurve.com/cars/corolla.jpg",
+      type:"hybrid", tank:43, cons:4.2, range:1024, fill:()=>(43*petrol).toFixed(2),
+      length:"4635 mm", width:"1780 mm", wheelbase:"2700 mm", trunk:"361 / 1050 L", rearLeg:"894 mm",
+      accel:"9.2 s", topSpeed:"180 km/h", power:"103 kW", torque:"142+163 Nm",
+      euroNCAP:"5★", adas:"Toyota Safety Sense 3, Pre-Collision, LTA, RSA",
+      tires:"205/55 R16", noise:"62 dB", roofRails:"Optional", warranty:"3+7 years hybrid", service:"≈340 €/year" },
+
+    { name: "Tesla Model 3 Long Range AWD", price: "44 990 €", img: "https://cdn.imaginecurve.com/cars/model3.jpg",
+      type:"ev", battery:79, cons:14.8, range:629, fill:()=>(79*elec).toFixed(2),
+      length:"4720 mm", width:"1933 mm", wheelbase:"2875 mm", trunk:"594 L (frunk+trunk)", rearLeg:"912 mm",
+      accel:"4.4 s", topSpeed:"201 km/h", power:"377 kW", torque:"660 Nm",
+      euroNCAP:"5★", adas:"Autopilot, FSD capable, AEB, Blind Spot, Summon",
+      tires:"235/45 R18", noise:"59 dB", roofRails:"No", warranty:"4 yr / 80k km (battery 8 yr)", service:"≈300 €/year" }
+    // Add more cars here — copy and paste!
+];
+
+let petrol = 1.55, diesel = 1.52, elec = 0.191;
+document.getElementById('petrol').addEventListener('input', e=> {petrol=+e.target.value; render();});
+document.getElementById('diesel').addEventListener('input', e=> {diesel=+e.target.value; render();});
+document.getElementById('elec').addEventListener('input', e=> {elec=+e.target.value; render();});
+
+function render() {
+    const table = document.getElementById('comparisonTable');
+    table.innerHTML = '';
+
+    // Header row with car names + images
+    let header = `<tr><th class="param">Parameter</th>`;
+    cars.forEach((car,i) => {
+        header += `<th class="car">
+            <button class="remove-btn" onclick="cars.splice(${i},1); render()">×</button>
+            ${car.name}<br><span class="price">${car.price}</span>
+            <img src="${car.img}" onerror="this.src='https://via.placeholder.com/300x120/222/fff?text=${car.name.split(' ')[0]}'">
+        </th>`;
+    });
+    header += `</tr>`;
+    table.innerHTML += header;
+
+    const rows = [
+        {section: "Basic Info", params: [
+            {label:"Price (SK market)", key:"price"},
+            {label:"Fuel type", get:c=>c.type.toUpperCase()},
+            {label:"Consumption", get:c=>c.cons + (c.type==='ev'?' kWh':' L') + '/100 km'},
+            {label:"Range (full tank/charge)", get:c=>c.range + ' km'},
+            {label:"Cost to fill/charge", get:c=>'€'+c.fill(), highlight:true},
+        ]},
+        {section: "Dimensions & Space", params: [
+            {label:"Length × Width", get:c=>c.length + ' × ' + c.width},
+            {label:"Wheelbase", key:"wheelbase"},
+            {label:"Trunk (min/max)", key:"trunk"},
+            {label:"Rear legroom", key:"rearLeg"},
+        ]},
+        {section: "Performance", params: [
+            {label:"0–100 km/h", key:"accel"},
+            {label:"Top speed", key:"topSpeed"},
+            {label:"Power", key:"power"},
+            {label:"Torque", key:"torque"},
+        ]},
+        {section: "Safety & ADAS", params: [
+            {label:"Euro NCAP", key:"euroNCAP"},
+            {label:"Key ADAS systems", key:"adas", small:true},
+        ]},
+        {section: "Practical Details", params: [
+            {label:"Tire size", key:"tires"},
+            {label:"Cabin noise @ 130 km/h", key:"noise"},
+            {label:"Roof rails", key:"roofRails"},
+            {label:"Warranty", key:"warranty", small:true},
+            {label:"Avg. annual service", key:"service"},
+        ]}
+    ];
+
+    rows.forEach(sec => {
+        table.innerHTML += `<tr><td colspan="${cars.length+1}" class="section">${sec.section}</td></tr>`;
+        sec.params.forEach(p => {
+            let row = `<tr${p.highlight?' class="highlight"':''}><th class="param">${p.label}</th>`;
+            cars.forEach(car => {
+                const value = p.get ? p.get(car) : (car[p.key] || '–');
+                row += `<td${p.small?' style="font-size:0.85em"':''}>${value}</td>`;
             });
-            updateCosts();
-        }
+            row += `</tr>`;
+            table.innerHTML += row;
+        });
+    });
+}
 
-        function updateCosts() {
-            carsData.forEach((car, i) => {
-                const cost = car.type === 'ev' ? car.fillCost(car) : (petrol);
-                document.getElementById(`cost${i}`).textContent = `€${car.fillCost(car)}`;
-            });
-        }
+render();
+</script>
 
-        function removeCar(i) {
-            carsData.splice(i, 1);
-            render();
-        }
+<div style="text-align:center; margin-top:30px; font-size:0.9em; color:#555;">
+    To add more cars → just copy one object in the <code>cars</code> array and paste with new data.<br>
+    Dealer links (SK): 
+    <a href="https://skoda.sk">Škoda</a> • 
+    <a href="https://vw.sk">Volkswagen</a> • 
+    <a href="https://toyota.sk">Toyota</a> • 
+    <a href="https://tesla.com/sk_sk">Tesla</a>
+</div>
 
-        render();
-    </script>
 </body>
 </html>
