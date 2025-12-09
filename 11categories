@@ -1,0 +1,91 @@
+        const categories = [
+            { title: "1. General / Identification", params: [
+                {k: "Make & Model", v: `${car.make} ${car.model}`},
+                {k: "Trim / Variant", v: car.trim || "-"},
+                {k: "Model year", v: car.year},
+                {k: "Body style", v: car.bodyStyle},
+                {k: "Drive type", v: car.driveType}
+            ]},
+            { title: "2. Engine & Performance", params: [
+                {k: "Engine type", v: car.engineType},
+                {k: "Displacement", v: car.displacement},
+                {k: "Number of cylinders", v: car.cylinders},
+                {k: "Valvetrain", v: car.valvetrain},
+                {k: "Aspiration", v: car.aspiration},
+                {k: "Horsepower", v: car.horsepower},
+                {k: "Torque", v: car.torque},
+                {k: "Redline", v: car.redline},
+                {k: "Fuel type", v: car.fuelType},
+                {k: "Battery capacity", v: car.batteryCapacity},
+                {k: "Electric motor power", v: car.electricMotorPower},
+                {k: "Combined system power", v: car.combinedSystemPower},
+                {k: "Transmission type", v: car.transmission},
+                {k: "0–100 km/h time", v: car.zeroToHundred},
+                {k: "Top speed", v: car.topSpeed},
+                {k: "Fuel economy / range", v: `${car.fuelEconomy} / ${car.range} km`},
+                {k: "Full fill/charge cost", v: `€${fillCost}`, highlight: true}
+            ]},
+            { title: "3. Dimensions & Weight", params: [
+                {k: "Length", v: car.length},
+                {k: "Width", v: car.width},
+                {k: "Height", v: car.height},
+                {k: "Wheelbase", v: car.wheelbase},
+                {k: "Track width (front/rear)", v: `${car.trackFront || '-'} / ${car.trackRear || '-'}`},
+                {k: "Ground clearance", v: car.groundClearance},
+                {k: "Curb weight", v: car.curbWeight},
+                {k: "GVWR", v: car.gvwr},
+                {k: "Towing capacity", v: car.towingCapacity},
+                {k: "Payload capacity", v: car.payloadCapacity}
+            ]},
+            { title: "4. Chassis & Suspension", params: [
+                {k: "Front suspension", v: car.frontSuspension},
+                {k: "Rear suspension", v: car.rearSuspension},
+                {k: "Steering type", v: car.steeringType},
+                {k: "Turning circle", v: car.turningCircle},
+                {k: "Brake type", v: car.brakeType},
+                {k: "Wheel size", v: car.wheelSize},
+                {k: "Tire size", v: car.tireSize}
+            ]},
+            { title: "5. Interior Dimensions", params: [
+                {k: "Headroom front / rear", v: `${car.headroomFront || '-'} / ${car.headroomRear || '-'}`},
+                {k: "Legroom front / rear", v: `${car.legroomFront || '-'} / ${car.legroomRear || '-'}`},
+                {k: "Shoulder room front / rear", v: `${car.shoulderFront || '-'} / ${car.shoulderRear || '-'}`},
+                {k: "Hip room front / rear", v: `${car.hipFront || '-'} / ${car.hipRear || '-'}`},
+                {k: "Passenger volume", v: car.passengerVolume},
+                {k: "Seating capacity", v: car.seatingCapacity}
+            ]},
+            { title: "6. Cargo / Trunk Space", params: [
+                {k: "Cargo volume behind rear seats", v: car.cargoVolume},
+                {k: "Cargo volume with seats folded", v: car.cargoFolded},
+                {k: "Trunk/liftgate opening width & height", v: `${car.trunkOpeningWidth || '-'} x ${car.trunkOpeningHeight || '-'}`},
+                {k: "Liftover height", v: car.liftoverHeight}
+            ]},
+            { title: "7. Fuel Tank & Range", params: [
+                {k: "Fuel tank capacity", v: car.fuelTank},
+                {k: "Estimated range", v: car.estimatedRange}
+            ]},
+            { title: "8. Safety & Driver Assistance", params: [
+                {k: "Crash test ratings", v: car.crashTestRatings},
+                {k: "Standard safety features", v: car.standardSafety},
+                {k: "Available ADAS", v: car.availableADAS}
+            ]},
+            { title: "9. Infotainment & Features", params: [
+                {k: "Screen size", v: car.screenSize},
+                {k: "Apple CarPlay / Android Auto", v: `${car.appleCarPlay || '-'} / ${car.androidAuto || '-'}`},
+                {k: "Audio system", v: car.audioSystem},
+                {k: "Number of USB ports, 12V outlets, wireless charging", v: `${car.usbPorts || '-'} USB, ${car.num12VOutlets || '-'} 12V, ${car.wirelessCharging || '-'}`}
+            ]},
+            { title: "10. Comfort & Convenience", params: [
+                {k: "Seat material", v: car.seatMaterial},
+                {k: "Power seats, heated/ventilated", v: `${car.powerSeats || '-'}, ${car.heatedSeats || '-'} / ${car.ventilatedSeats || '-'}`},
+                {k: "Dual-zone climate control", v: car.dualZoneClimate},
+                {k: "Panoramic sunroof", v: car.panoramicSunroof},
+                {k: "Keyless entry & start", v: car.keylessEntry},
+                {k: "Hands-free power liftgate", v: car.handsFreeLiftgate}
+            ]},
+            { title: "11. Pricing (MSRP)", params: [
+                {k: "Base price", v: car.basePrice},
+                {k: "Price as-tested", v: car.price}
+            ]}
+        ];
+
