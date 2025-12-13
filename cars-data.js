@@ -47,12 +47,12 @@ const carDatabase = [
         buyingLink: "https://www.leapmotor.sk/b10"
     },
     {
-        make: "Peugeot", model: "308 Hatchback", trim: "Active", year: 2018, bodyStyle: "Hatchback", driveType: "FWD",
+        make: "Peugeot", model: "308 Hatchback", trim: "Allure", year: 2018, bodyStyle: "Hatchback", driveType: "FWD",
         engineType: "Inline-4", displacement: "1.6L", cylinders: 4, valvetrain: "DOHC", aspiration: "Turbo",
         horsepower: "120 hp", torque: "221 lb-ft", redline: "4000 rpm", fuelType: "Diesel",
-        batteryCapacity: "N/A", electricMotorPower: "N/A", combinedSystemPower: "N/A",
-        transmission: "6-speed manual", zeroToHundred: "9.6 s", topSpeed: "118 mph",
-        fuelEconomy: "4.2 L/100km", range: "1262 km", length: "4253 mm", width: "1804 mm", height: "1457 mm",
+        batteryCapacity: "N/A", electricMotorPower: "N/A", combinedSystemPower: "88 kW",
+        transmission: "6-speed manual", zeroToHundred: "9.6 s", topSpeed: "210 km/h",
+        fuelEconomy: "5.7 L/100km", range: "1262 km", length: "4253 mm", width: "1804 mm", height: "1457 mm",
         wheelbase: "2738 mm", trackFront: "1553 mm", trackRear: "1560 mm", groundClearance: "140 mm",
         curbWeight: "1265 kg", gvwr: "1775 kg", towingCapacity: "1300 kg", payloadCapacity: "510 kg",
         frontSuspension: "MacPherson", rearSuspension: "Torsion beam", steeringType: "Rack-and-pinion",
