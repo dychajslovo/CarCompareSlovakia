@@ -207,27 +207,5 @@ const carDatabase = [
         basePrice: "37 500 €", img: "https://www.hyundai.sk/wp-content/uploads/2025/02/tucson-hybrid.jpg",
         buyingLink: "https://www.hyundai.sk/tucson-hybrid"
     },
-    {
-        make: "Kia", model: "EV5", trim: "GT-Line", year: 2025, bodyStyle: "Compact SUV", driveType: "RWD",
-        engineType: "Electric", displacement: "N/A", cylinders: "N/A", valvetrain: "N/A", aspiration: "N/A",
-        horsepower: "215 hp", torque: "258 lb-ft", redline: "N/A", fuelType: "EV", batteryCapacity: "81.4 kWh",
-        electricMotorPower: "160 kW", combinedSystemPower: "160 kW", transmission: "Single-speed",
-        zeroToHundred: "8.4 s", topSpeed: "103 mph", fuelEconomy: "16.5 kWh/100km", range: "530 km",
-        length: "4615 mm", width: "1875 mm", height: "1715 mm", wheelbase: "2750 mm",
-        trackFront: "1625 mm", trackRear: "1630 mm", groundClearance: "170 mm", curbWeight: "1950 kg",
-        gvwr: "2400 kg", towingCapacity: "1400 kg", payloadCapacity: "450 kg",
-        frontSuspension: "MacPherson", rearSuspension: "Multi-link", steeringType: "Rack-and-pinion",
-        turningCircle: "11.6 m", brakeType: "Disc/disc", wheelSize: "19\"", tireSize: "235/50R19",
-        headroomFront: "1020 mm", headroomRear: "990 mm", legroomFront: "1050 mm", legroomRear: "970 mm",
-        shoulderFront: "1460 mm", shoulderRear: "1410 mm", hipFront: "1380 mm", hipRear: "1330 mm",
-        passengerVolume: "3.0 m³", seatingCapacity: 5, cargoVolume: "513 L", cargoFolded: "1671 L",
-        trunkOpeningWidth: "1050 mm", trunkOpeningHeight: "800 mm", liftoverHeight: "720 mm",
-        fuelTank: "N/A", estimatedRange: "530 km", crashTestRatings: "5 stars", standardSafety: "7 airbags, AEB",
-        availableADAS: "Highway Drive Assist", screenSize: "12.3\"", appleCarPlay: "Yes", androidAuto: "Yes",
-        audioSystem: "8 speakers", usbPorts: "4", num12VOutlets: "2", wirelessCharging: "Yes",
-        seatMaterial: "Leatherette", powerSeats: "Front", heatedSeats: "All", ventilatedSeats: "Front",
-        dualZoneClimate: "Yes", panoramicSunroof: "Yes", keylessEntry: "Yes", handsFreeLiftgate: "Yes",
-        basePrice: "54 290 €", img: "https://www.kia.sk/wp-content/uploads/2025/03/kia-ev5.jpg",
-        buyingLink: "https://www.kia.sk/ev5"
-    }
+ { make: “Mazda”, model: “CX-5”, trim: “Skyactiv (common European variant: e.g., SE-L/Sport with Skyactiv-G)”, year: 2020, bodyStyle: “Compact SUV”, driveType: “FWD (AWD available)”, engineType: “Gasoline”, displacement: “2.0 L (Skyactiv-G common in Europe)”, cylinders: “4”, valvetrain: “DOHC”, aspiration: “Naturally Aspirated”, horsepower: “165 hp”, torque: “157 lb-ft”, redline: “N/A”, fuelType: “Gasoline”, batteryCapacity: “N/A”, electricMotorPower: “N/A”, combinedSystemPower: “N/A”, transmission: “6-speed manual or automatic”, zeroToHundred: “~9.2 s (varies by config)”, topSpeed: “~200 km/h”, fuelEconomy: “6-7 L/100km (_combined WLTP)”, range: “~800 km”, length: “4555 mm”, width: “1840 mm”, height: “1680 mm”, wheelbase: “2700 mm”, trackFront: “~1595 mm”, trackRear: “~1595 mm”, groundClearance: “~192 mm”, curbWeight: “~1450-1600 kg”, gvwr: “~2000 kg”, towingCapacity: “1800-2000 kg (braked)”, payloadCapacity: “~550 kg”, frontSuspension: “MacPherson strut”, rearSuspension: “Multi-link”, steeringType: “Rack-and-pinion electric”, turningCircle: “11 m”, brakeType: “Disc/disc”, wheelSize: “17-19”, tireSize: “225/65R17 to 225/55R19”, headroomFront: “~1000 mm”, headroomRear: “~991 mm”, legroomFront: “~1041 mm”, legroomRear: “~1007 mm”, shoulderFront: “~1455 mm”, shoulderRear: “~1390 mm”, hipFront: “~1400 mm”, hipRear: “~1405 mm”, passengerVolume: “~2.9 m³”, seatingCapacity: 5, cargoVolume: “506 L”, cargoFolded: “1620 L”, trunkOpeningWidth: “~1100 mm (estimated)”, trunkOpeningHeight: “N/A”, liftoverHeight: “~730 mm”, fuelTank: “56-58 L”, estimatedRange: “~800 km”, crashTestRatings: “5 stars (Euro NCAP)”, standardSafety: “6 airbags, AEB, Lane Keep Assist, Blind Spot Monitoring”, availableADAS: “Adaptive Cruise, 360° Camera (higher trims), Head-up Display”, screenSize: “7-8”, appleCarPlay: “Yes (standard or optional)”, androidAuto: “Yes (standard or optional)”, audioSystem: “Up to 10 speakers Bose”, usbPorts: “Multiple”, num12VOutlets: “Several”, wirelessCharging: “Available (higher trims)”, seatMaterial: “Cloth to Leather”, powerSeats: “Driver/Passenger (higher trims)”, heatedSeats: “Front & Rear (higher trims)”, ventilatedSeats: “Available (top trims)”, dualZoneClimate: “Yes (higher trims)”, panoramicSunroof: “Available”, keylessEntry: “Yes”, handsFreeLiftgate: “Yes (higher trims)”, basePrice: “~28 000 € (Europe approximate for 2020)”, img: “https://news.mazdausa.com/image/2020-Mazda-CX-5-Signature_1170x693.jpg”, buyingLink: “https://www.mazda.sk/modely/cx-5” }
 ];
