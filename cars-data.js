@@ -169,7 +169,7 @@ const carDatabase = [
     panoramicSunroof: "Optional",
     keylessEntry: "Yes",
     handsFreeLiftgate: "Yes",
-    basePrice: "Varies by market",
+    basePrice: "31 000 €",
     img: "N/A",
     buyingLink: "N/A"
 },
@@ -364,7 +364,7 @@ const carDatabase = [
     keylessEntry: "Yes",
     handsFreeLiftgate: "Optional",
 
-    basePrice: "≈ 26 000 €",
+    basePrice: "26 000 €",
     img: "https://upload.wikimedia.org/wikipedia/commons/8/8f/2019_Mazda_CX-5.jpg",
     buyingLink: "https://www.mazda.eu"
 }
