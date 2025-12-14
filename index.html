@@ -109,8 +109,8 @@
     <div class="count" id="count">0 cars selected</div>
     <div style="margin-top:10px; font-size:0.95em;">
         Petrol €/L: <input type="number" step="0.01" value="1.55" id="petrol" style="width:70px;">
-        Diesel €/L: <input type="number" step="0.01" value="1.52" id="diesel" style="width:70px;">
-        Electricity €/kWh: <input type="number" step="0.001" value="0.191" id="elec" style="width:80px;">
+        Diesel €/L: <input type="number" step="0.01" value="1.55" id="diesel" style="width:70px;">
+        Electricity €/kWh: <input type="number" step="0.001" value="0.291" id="elec" style="width:80px;">
     </div>
 </div>
 
@@ -123,7 +123,7 @@
 <script>
 let openCategories = new Set();
 let selectedCars = [];
-let petrol = 1.55, diesel = 1.52, elec = 0.191;
+let petrol = 1.55, diesel = 1.55, elec = 0.291;
 
 const select = document.getElementById('carSelect');
 carDatabase.forEach((car, i) => {
