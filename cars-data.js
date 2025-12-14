@@ -207,5 +207,108 @@ const carDatabase = [
         basePrice: "37 500 €", img: "https://www.hyundai.sk/wp-content/uploads/2025/02/tucson-hybrid.jpg",
         buyingLink: "https://www.hyundai.sk/tucson-hybrid"
     },
- { make: “Mazda”, model: “CX-5”, trim: “Skyactiv (common European variant: e.g., SE-L/Sport with Skyactiv-G)”, year: 2020, bodyStyle: “Compact SUV”, driveType: “FWD (AWD available)”, engineType: “Gasoline”, displacement: “2.0 L (Skyactiv-G common in Europe)”, cylinders: “4”, valvetrain: “DOHC”, aspiration: “Naturally Aspirated”, horsepower: “165 hp”, torque: “157 lb-ft”, redline: “N/A”, fuelType: “Gasoline”, batteryCapacity: “N/A”, electricMotorPower: “N/A”, combinedSystemPower: “N/A”, transmission: “6-speed manual or automatic”, zeroToHundred: “~9.2 s (varies by config)”, topSpeed: “~200 km/h”, fuelEconomy: “6-7 L/100km (_combined WLTP)”, range: “~800 km”, length: “4555 mm”, width: “1840 mm”, height: “1680 mm”, wheelbase: “2700 mm”, trackFront: “~1595 mm”, trackRear: “~1595 mm”, groundClearance: “~192 mm”, curbWeight: “~1450-1600 kg”, gvwr: “~2000 kg”, towingCapacity: “1800-2000 kg (braked)”, payloadCapacity: “~550 kg”, frontSuspension: “MacPherson strut”, rearSuspension: “Multi-link”, steeringType: “Rack-and-pinion electric”, turningCircle: “11 m”, brakeType: “Disc/disc”, wheelSize: “17-19”, tireSize: “225/65R17 to 225/55R19”, headroomFront: “~1000 mm”, headroomRear: “~991 mm”, legroomFront: “~1041 mm”, legroomRear: “~1007 mm”, shoulderFront: “~1455 mm”, shoulderRear: “~1390 mm”, hipFront: “~1400 mm”, hipRear: “~1405 mm”, passengerVolume: “~2.9 m³”, seatingCapacity: 5, cargoVolume: “506 L”, cargoFolded: “1620 L”, trunkOpeningWidth: “~1100 mm (estimated)”, trunkOpeningHeight: “N/A”, liftoverHeight: “~730 mm”, fuelTank: “56-58 L”, estimatedRange: “~800 km”, crashTestRatings: “5 stars (Euro NCAP)”, standardSafety: “6 airbags, AEB, Lane Keep Assist, Blind Spot Monitoring”, availableADAS: “Adaptive Cruise, 360° Camera (higher trims), Head-up Display”, screenSize: “7-8”, appleCarPlay: “Yes (standard or optional)”, androidAuto: “Yes (standard or optional)”, audioSystem: “Up to 10 speakers Bose”, usbPorts: “Multiple”, num12VOutlets: “Several”, wirelessCharging: “Available (higher trims)”, seatMaterial: “Cloth to Leather”, powerSeats: “Driver/Passenger (higher trims)”, heatedSeats: “Front & Rear (higher trims)”, ventilatedSeats: “Available (top trims)”, dualZoneClimate: “Yes (higher trims)”, panoramicSunroof: “Available”, keylessEntry: “Yes”, handsFreeLiftgate: “Yes (higher trims)”, basePrice: “~28 000 € (Europe approximate for 2020)”, img: “https://news.mazdausa.com/image/2020-Mazda-CX-5-Signature_1170x693.jpg”, buyingLink: “https://www.mazda.sk/modely/cx-5” }
+{
+    make: "Mazda",
+    model: "CX-5",
+    trim: "Skyactiv-G",
+    year: 2020,
+    bodyStyle: "Compact SUV",
+    driveType: "FWD",
+
+    engineType: "Inline-4",
+    displacement: "2.0 L",
+    cylinders: "4",
+    valvetrain: "DOHC",
+    aspiration: "Naturally Aspirated",
+
+    horsepower: "165 hp",
+    torque: "213 Nm",
+    redline: "6500 rpm",
+    fuelType: "Petrol",
+
+    batteryCapacity: "N/A",
+    electricMotorPower: "N/A",
+    combinedSystemPower: "165 hp",
+
+    transmission: "6-speed Automatic",
+
+    zeroToHundred: "10.3 s",
+    topSpeed: "201 km/h",
+    fuelEconomy: "6.9 L/100 km",
+    range: "820 km",
+
+    length: "4550 mm",
+    width: "1840 mm",
+    height: "1680 mm",
+    wheelbase: "2700 mm",
+
+    trackFront: "1595 mm",
+    trackRear: "1595 mm",
+    groundClearance: "192 mm",
+
+    curbWeight: "1515 kg",
+    gvwr: "2060 kg",
+    towingCapacity: "1800 kg",
+    payloadCapacity: "545 kg",
+
+    frontSuspension: "MacPherson Strut",
+    rearSuspension: "Multi-link",
+    steeringType: "Electric Power Steering",
+    turningCircle: "11.0 m",
+
+    brakeType: "Disc/disc",
+    wheelSize: "17\"",
+    tireSize: "225/65R17",
+
+    headroomFront: "1020 mm",
+    headroomRear: "990 mm",
+    legroomFront: "1040 mm",
+    legroomRear: "1000 mm",
+
+    shoulderFront: "1450 mm",
+    shoulderRear: "1410 mm",
+    hipFront: "1380 mm",
+    hipRear: "1360 mm",
+
+    passengerVolume: "3.0 m³",
+    seatingCapacity: 5,
+
+    cargoVolume: "506 L",
+    cargoFolded: "1620 L",
+
+    trunkOpeningWidth: "1100 mm",
+    trunkOpeningHeight: "800 mm",
+    liftoverHeight: "720 mm",
+
+    fuelTank: "56 L",
+    estimatedRange: "820 km",
+
+    crashTestRatings: "5 stars (Euro NCAP)",
+    standardSafety: "6 airbags, ABS, ESC, AEB",
+    availableADAS: "Adaptive Cruise, Lane Assist, Blind Spot Monitoring",
+
+    screenSize: "7\"",
+    appleCarPlay: "Yes",
+    androidAuto: "Yes",
+
+    audioSystem: "6 speakers",
+    usbPorts: "2",
+    num12VOutlets: "2",
+    wirelessCharging: "No",
+
+    seatMaterial: "Cloth / Leather (depending on trim)",
+    powerSeats: "Driver",
+    heatedSeats: "Front",
+    ventilatedSeats: "No",
+
+    dualZoneClimate: "Yes",
+    panoramicSunroof: "Optional",
+    keylessEntry: "Yes",
+    handsFreeLiftgate: "Optional",
+
+    basePrice: "≈ 26 000 €",
+    img: "https://upload.wikimedia.org/wikipedia/commons/8/8f/2019_Mazda_CX-5.jpg",
+    buyingLink: "https://www.mazda.eu"
+}
+
 ];
