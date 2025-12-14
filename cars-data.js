@@ -93,7 +93,6 @@ const carDatabase = [
         buyingLink: "https://www.vw.sk/id4"
     },
     {
-        {
     make: "KGM",
     model: "Torres",
     trim: "EVX",
